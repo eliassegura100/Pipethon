@@ -3,7 +3,6 @@
   <tr>
     <td>
       <h1>Pipethon</h1>
-    </td>
     <td><img src="assets/pipethon-logo.jpg" width="150"/></td>
   </tr>
 </table>
