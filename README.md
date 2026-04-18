@@ -1,10 +1,10 @@
 # Pipethon <img width="150" height="150" alt="Pipethon Logo copy" src="https://github.com/user-attachments/assets/901778fe-0c9c-469b-b897-c4d8cdeea65c" />
 <table>
   <tr>
-    <td><img src="assets/pipethon-logo.jpg" width="150"/></td>
     <td>
-      <h1>Pipethon</h1>
-      <i>Flow. Match. Think.</i>
+      <h1>Pipethon</h1></td>
+    <td>
+      <img src="assets/pipethon-logo.jpg" width="150"/>
     </td>
   </tr>
 </table>
