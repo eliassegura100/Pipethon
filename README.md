@@ -1,5 +1,5 @@
 # Pipethon <img width="150" height="150" alt="Pipethon Logo copy" src="https://github.com/user-attachments/assets/901778fe-0c9c-469b-b897-c4d8cdeea65c" />
-<img src="Pipethon Logo copy" width="120" align="left" style="margin-right: 12px"/>
+<img src="assets/Pipethon Logo copy" width="120" align="left" style="margin-right: 12px"/>
 
 ***Flow. Match. Think.***
 
