@@ -2,8 +2,9 @@
 <table>
     <tb>
       <h1>Pipethon</h1>
+        <img src="assets/pipethon-logo.jpg" width="150"/>
     <tb>
-    <td><img src="assets/pipethon-logo.jpg" width="150"/></td>
+    
 </table>
 
 ***Flow. Match. Think.***
