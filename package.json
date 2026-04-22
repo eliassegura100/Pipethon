@@ -1,4 +1,32 @@
 {
+  "name": "pipethon",
+  "version": "0.1.0",
+  "description": "A modern programming language built for the age of intelligent systems",
+  "type": "module",
+  "main": "src/compiler.js",
+  "bin": {
+    "pipethon": "src/pipethon.js"
+  },
+  "author": "Elias Segura, Garnik Gevorkyan, Riley Vegting",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/pipethon"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules --test test/**/*.test.js --reporter=tap | node node_modules/tap-nyc",
+    "coverage": "c8 --reporter=text npm test",
+    "check": "node src/pipethon.js check",
+    "parse": "node src/pipethon.js parse",
+    "analyze": "node src/pipethon.js analyze",
+    "optimize": "node src/pipethon.js optimize",
+    "generate": "node src/pipethon.js generate",
+    "compile": "node src/pipethon.js compile"
+  },
+  "devDependencies": {
+    "c8": "^8.0.0",
+    "tap-nyc": "^2.0.0"
+  },
   "dependencies": {
     "ohm-js": "^17.5.0"
   }
