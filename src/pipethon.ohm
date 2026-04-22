@@ -1,0 +1,117 @@
+Pipethon {
+  Program = Statement+
+
+  Statement = PipelineDecl
+            | FunctionDecl
+            | MatchExpr
+            | Assignment
+            | ReturnStmt
+            | BreakStmt
+            | ContinueStmt
+            | ExpressionStmt
+
+  PipelineDecl = "pipeline" identifier "{" Statement+ "}"
+
+  FunctionDecl = "fn" identifier "(" Parameters? ")" "->" Type "{" Statement+ "}"
+
+  Parameters = Parameter ("," Parameter)*
+
+  Parameter = identifier ":" Type
+
+  MatchExpr = "match" Expression "{" MatchCase+ "}"
+
+  MatchCase = Pattern "=>" Expression
+
+  Pattern = LiteralPattern
+          | IdentifierPattern
+          | TypePattern
+          | WildcardPattern
+          | StructPattern
+
+  LiteralPattern = literal
+
+  IdentifierPattern = identifier
+
+  TypePattern = identifier "(" Pattern? ")"
+
+  WildcardPattern = "_"
+
+  StructPattern = "{" (identifier ":" Pattern)? ("," identifier ":" Pattern)* "}"
+
+  Assignment = identifier "=" Expression
+
+  ReturnStmt = "return" Expression?
+
+  BreakStmt = "break"
+
+  ContinueStmt = "continue"
+
+  ExpressionStmt = Expression
+
+  Expression = PipeExpression
+
+  PipeExpression = ComparisonExpression ("|" ComparisonExpression)*
+
+  ComparisonExpression = AdditiveExpression (CompOp AdditiveExpression)*
+
+  CompOp = "==" | "!=" | "<" | "<=" | ">" | ">="
+
+  AdditiveExpression = MultiplicativeExpression (AddOp MultiplicativeExpression)*
+
+  AddOp = "+" | "-"
+
+  MultiplicativeExpression = UnaryExpression (MulOp UnaryExpression)*
+
+  MulOp = "*" | "/" | "%"
+
+  UnaryExpression = (UnaryOp)* PostfixExpression
+
+  UnaryOp = "-" | "!"
+
+  PostfixExpression = PrimaryExpression (CallSuffix | IndexSuffix)*
+
+  CallSuffix = "(" Arguments? ")"
+
+  IndexSuffix = "[" Expression "]"
+
+  Arguments = Expression ("," Expression)*
+
+  PrimaryExpression = identifier
+                    | literal
+                    | "(" Expression ")"
+                    | ArrayLiteral
+                    | StructLiteral
+
+  ArrayLiteral = "[" (Expression ("," Expression)*)? "]"
+
+  StructLiteral = "{" (identifier ":" Expression)? ("," identifier ":" Expression)* "}"
+
+  Type = "int" | "float" | "bool" | "string" | "void"
+        | "[" Type "]"
+        | "{" (identifier ":" Type)? ("," identifier ":" Type)* "}"
+        | identifier
+
+  identifier = ~keyword letter (letter | digit | "_")*
+
+  literal = intLiteral | floatLiteral | boolLiteral | stringLiteral
+
+  intLiteral = digit+
+
+  floatLiteral = digit+ "." digit+
+
+  boolLiteral = "true" | "false"
+
+  stringLiteral = "\"" (escapeSequence | ~"\"" any)* "\""
+
+  escapeSequence = "\\" any
+
+  keyword = ("pipeline" | "fn" | "match" | "return" | "break" | "continue"
+            | "true" | "false") ~identifierPart
+
+  identifierPart = letter | digit | "_"
+
+  space += comment
+
+  comment = "//" ~newline any* newline
+          | "/*" (~"*/" any)* "*/"
+}
