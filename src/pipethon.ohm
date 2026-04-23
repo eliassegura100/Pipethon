@@ -1,117 +1,185 @@
+// pipethon.ohm — The official Pipethon grammar
+//
+// Pipethon is a pipe-oriented, pattern-matching language designed for AI workflows.
+// Key design decisions encoded here:
+//   - Pipeline operator |> chains transformations
+//   - Pattern blocks { pattern => expr } dispatch on type/shape/value
+//   - null/none is ONLY valid in explicitly optional (Type?) contexts
+//   - Unannotated variables are Any (non-nullable)
+//   - llm() is a first-class pipe stage returning String?
+//   - ?? is the null-coalescing operator (only valid on optional values)
+
 Pipethon {
+
+  // ── Top Level ───────────────────────────────────────────────────────────────
+
   Program = Statement+
 
-  Statement = PipelineDecl
-            | FunctionDecl
-            | MatchExpr
-            | Assignment
-            | ReturnStmt
-            | BreakStmt
-            | ContinueStmt
-            | ExpressionStmt
+  Statement = LetDecl
+            | PipelineDecl
+            | ExprStmt
 
-  PipelineDecl = "pipeline" identifier "{" Statement+ "}"
+  // let x = expr;
+  // let x: String? = none;
+  LetDecl = let id (":" TypeAnnot)? "=" Pipeline ";"
 
-  FunctionDecl = "fn" identifier "(" Parameters? ")" "->" Type "{" Statement+ "}"
+  // pipeline name = stage |> stage ...;
+  // pipeline name: [Int] -> [Int] = stage |> stage ...;
+  PipelineDecl = pipeline id (":" PipelineType)? "=" Pipeline ";"
 
-  Parameters = Parameter ("," Parameter)*
+  ExprStmt = Pipeline ";"
 
-  Parameter = identifier ":" Type
+  // ── Pipelines ───────────────────────────────────────────────────────────────
 
-  MatchExpr = "match" Expression "{" MatchCase+ "}"
+  // A pipeline is an expression optionally followed by one or more |> stages.
+  // With no stages, it degenerates to a plain expression.
+  Pipeline = Expr ("|>" PipeStage)*
 
-  MatchCase = Pattern "=>" Expression
+  PipeStage = llm "(" NonemptyListOf<LLMArg, ","> ")"  -- llm
+            | id PatternBlock                            -- namedStage
+            | PatternBlock                               -- anonStage
+            | id "(" ListOf<Expr, ","> ")"              -- call
+            | id                                        -- ref
 
-  Pattern = LiteralPattern
-          | IdentifierPattern
-          | TypePattern
-          | WildcardPattern
-          | StructPattern
+  // llm(model: "claude", prompt: "...", format: json)
+  LLMArg = id ":" (strlit | id)
 
-  LiteralPattern = literal
+  // ── Pattern Blocks ──────────────────────────────────────────────────────────
 
-  IdentifierPattern = identifier
+  PatternBlock = "{" MatchArm+ "}"
 
-  TypePattern = identifier "(" Pattern? ")"
+  // pattern [if guard] => body
+  MatchArm = Pattern ("if" Expr)? "=>" ArmBody
 
-  WildcardPattern = "_"
+  // drop removes the item; any expression is otherwise valid
+  ArmBody = drop | Expr
 
-  StructPattern = "{" (identifier ":" Pattern)? ("," identifier ":" Pattern)* "}"
+  // ── Patterns ────────────────────────────────────────────────────────────────
 
-  Assignment = identifier "=" Expression
+  Pattern = some "(" id ")"                               -- some
+          | none                                          -- none
+          | typePat "(" id ")"                            -- typed
+          | "[" "]"                                       -- emptyList
+          | "[" id "]"                                    -- singleList
+          | "[" id "," "..." id "]"                       -- headTail
+          | "{" NonemptyListOf<FieldPat, ","> "}"         -- object
+          | strlit                                        -- strLit
+          | floatlit                                      -- floatLit
+          | intlit                                        -- intLit
+          | boollit                                       -- boolLit
+          | "_"                                           -- wildcard
 
-  ReturnStmt = "return" Expression?
+  // The five matchable runtime types
+  typePat = "int" ~alnum
+          | "float" ~alnum
+          | "string" ~alnum
+          | "bool" ~alnum
+          | "list" ~alnum
 
-  BreakStmt = "break"
+  // { name: n, age: a }  or shorthand  { name, age }
+  FieldPat = id ":" id   -- bound
+           | id           -- shorthand
 
-  ContinueStmt = "continue"
+  // ── Type Annotations ────────────────────────────────────────────────────────
 
-  ExpressionStmt = Expression
+  // String?  vs  String
+  TypeAnnot = PrimType "?"   -- optional
+            | PrimType        -- required
 
-  Expression = PipeExpression
+  // Valid primitive type names
+  PrimType = "Int" | "Float" | "String" | "Bool" | "List" | "Any"
 
-  PipeExpression = ComparisonExpression ("|" ComparisonExpression)*
+  // Used in named pipeline declarations: [Int] -> [Int]
+  PipelineType = TypeAnnot "->" TypeAnnot
 
-  ComparisonExpression = AdditiveExpression (CompOp AdditiveExpression)*
+  // ── Expressions (precedence: lowest at top, highest at bottom) ───────────
+  //
+  // ?? (null coalesce) — lowest, only valid on optional-typed left operand
+  // ||  &&  == !=  < <= > >=  + -  * / %  unary  method calls  primary
 
-  CompOp = "==" | "!=" | "<" | "<=" | ">" | ">="
+  Expr  = Expr "??" Expr0   -- coalesce
+        | Expr0
 
-  AdditiveExpression = MultiplicativeExpression (AddOp MultiplicativeExpression)*
+  Expr0 = Expr0 "||" Expr1  -- or
+        | Expr1
 
-  AddOp = "+" | "-"
+  Expr1 = Expr1 "&&" Expr2  -- and
+        | Expr2
 
-  MultiplicativeExpression = UnaryExpression (MulOp UnaryExpression)*
+  Expr2 = Expr2 ("==" | "!=") Expr3   -- eq
+        | Expr3
 
-  MulOp = "*" | "/" | "%"
+  Expr3 = Expr3 ("<=" | ">=" | "<" | ">") Expr4  -- compare
+        | Expr4
 
-  UnaryExpression = (UnaryOp)* PostfixExpression
+  Expr4 = Expr4 ("+" | "-") Expr5   -- add
+        | Expr5
 
-  UnaryOp = "-" | "!"
+  Expr5 = Expr5 ("*" | "/" | "%") Expr6  -- mul
+        | Expr6
 
-  PostfixExpression = PrimaryExpression (CallSuffix | IndexSuffix)*
+  Expr6 = "-" Expr6   -- negate
+        | "!" Expr6   -- not
+        | Expr7
 
-  CallSuffix = "(" Arguments? ")"
+  // Method calls and member access (highest binary precedence)
+  Expr7 = Expr7 "." id "(" ListOf<Expr, ","> ")"  -- methodCall
+        | Expr7 "." id                              -- member
+        | Primary
 
-  IndexSuffix = "[" Expression "]"
+  Primary = "(" Expr ")"                                  -- parens
+          | "[" ListOf<Expr, ","> "]"                     -- list
+          | "{" NonemptyListOf<ObjField, ","> "}"         -- object
+          | llm "(" NonemptyListOf<LLMArg, ","> ")"       -- llm
+          | floatlit
+          | intlit
+          | strlit
+          | boollit
+          | none                                          -- none
+          | id "(" ListOf<Expr, ","> ")"                 -- call
+          | id                                           -- id
 
-  Arguments = Expression ("," Expression)*
+  ObjField = id ":" Expr
 
-  PrimaryExpression = identifier
-                    | literal
-                    | "(" Expression ")"
-                    | ArrayLiteral
-                    | StructLiteral
+  // ── Lexical Rules ────────────────────────────────────────────────────────────
 
-  ArrayLiteral = "[" (Expression ("," Expression)*)? "]"
+  intlit   = digit+
+  floatlit = digit+ "." digit+ (("e" | "E") ("+" | "-")? digit+)?
+  boollit  = ("true" | "false") ~alnum
 
-  StructLiteral = "{" (identifier ":" Expression)? ("," identifier ":" Expression)* "}"
+  // Strings support \n \t \\ \" escape sequences.
+  // Note: {input} interpolation in llm prompts is treated as literal text
+  // by the parser; the analyzer validates that interpolated names are in scope.
+  strlit  = "\"" strChar* "\""
+  strChar = ~"\"" ~"\n" ~"\\" any
+          | "\\" ("n" | "t" | "\\" | "\"")  -- escape
 
-  Type = "int" | "float" | "bool" | "string" | "void"
-        | "[" Type "]"
-        | "{" (identifier ":" Type)? ("," identifier ":" Type)* "}"
-        | identifier
+  // ── Keywords ────────────────────────────────────────────────────────────────
+  // Every keyword uses a ~alnum trailing guard to prevent partial matches
+  // (e.g., preventing "letter" from matching the "let" keyword).
 
-  identifier = ~keyword letter (letter | digit | "_")*
+  let      = "let"      ~alnum
+  pipeline = "pipeline" ~alnum
+  some     = "some"     ~alnum
+  none     = "none"     ~alnum
+  drop     = "drop"     ~alnum
+  llm      = "llm"      ~alnum
+  if       = "if"       ~alnum
 
-  literal = intLiteral | floatLiteral | boolLiteral | stringLiteral
+  keyword = let | pipeline | some | none | drop | llm | if
+          | "int"    ~alnum
+          | "float"  ~alnum
+          | "string" ~alnum
+          | "bool"   ~alnum
+          | "list"   ~alnum
+          | "true"   ~alnum
+          | "false"  ~alnum
 
-  intLiteral = digit+
+  // Identifiers may not shadow keywords.
+  // Underscores are allowed after the first character.
+  id = ~keyword letter (alnum | "_")*
 
-  floatLiteral = digit+ "." digit+
-
-  boolLiteral = "true" | "false"
-
-  stringLiteral = "\"" (escapeSequence | ~"\"" any)* "\""
-
-  escapeSequence = "\\" any
-
-  keyword = ("pipeline" | "fn" | "match" | "return" | "break" | "continue"
-            | "true" | "false") ~identifierPart
-
-  identifierPart = letter | digit | "_"
-
-  space += comment
-
-  comment = "//" ~newline any* newline
-          | "/*" (~"*/" any)* "*/"
+  // Extend whitespace to include both comment styles.
+  space += "//" (~"\n" any)*        -- lineComment
+         | "/*" (~"*/" any)* "*/"   -- blockComment
 }

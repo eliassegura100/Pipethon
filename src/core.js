@@ -1,224 +1,228 @@
-/**
- * core.js - Core Utilities and Data Structures
- *
- * Provides utility functions and foundational data structures used
- * throughout the Pipethon compiler:
- * - AST node constructors and helpers
- * - Type system utilities
- * - Pattern matching utilities
- * - Error handling and reporting
- * - Common algorithms and operations
- */
+// core.js — internal program representation for Pipethon.
+//
+// Every node is a plain JS object with a "kind" property.
+// The analyzer attaches a "type" property to all expression nodes.
+//
+// Key null-safety design:
+//   - optionalType(base) is the ONLY type that can hold none.
+//   - anyType is non-nullable (Any ≠ Any?).
+//   - none is only valid as a value when the target type is optional.
+//   - llm() always produces optionalType(stringType).
 
-/**
- * Creates a Program AST node.
- *
- * @param {array} statements - Array of statement nodes
- * @returns {object} Program node
- */
-export function createProgram(statements) {
-  return {
-    type: 'Program',
-    statements,
-  }
+// ── Primitive Types ───────────────────────────────────────────────────────────
+
+export const intType    = "Int"
+export const floatType  = "Float"
+export const stringType = "String"
+export const boolType   = "Bool"
+export const listType   = "List"
+export const anyType    = "Any"
+// export const voidType   = "Void"
+
+// The one composite type that carries nullability.
+export function optionalType(baseType) {
+  return { kind: "OptionalType", baseType }
 }
 
-/**
- * Creates a pipeline declaration node.
- *
- * @param {string} name - Pipeline name
- * @param {array} statements - Pipeline body statements
- * @returns {object} PipelineDecl node
- */
-export function createPipeline(name, statements) {
-  return {
-    type: 'PipelineDecl',
-    name,
-    statements,
-  }
+export function isOptional(type) {
+  return type?.kind === "OptionalType"
 }
 
-/**
- * Creates a function declaration node.
- *
- * @param {string} name - Function name
- * @param {array} parameters - Array of parameter nodes
- * @param {object} returnType - Return type
- * @param {array} body - Function body statements
- * @returns {object} FunctionDecl node
- */
-export function createFunction(name, parameters, returnType, body) {
-  return {
-    type: 'FunctionDecl',
-    name,
-    parameters,
-    returnType,
-    body,
-  }
+// ── Program ───────────────────────────────────────────────────────────────────
+
+export function program(statements) {
+  return { kind: "Program", statements }
 }
 
-/**
- * Creates a match expression node.
- *
- * @param {object} expr - The expression to match
- * @param {array} cases - Array of match case nodes
- * @returns {object} MatchExpr node
- */
-export function createMatch(expr, cases) {
-  return {
-    type: 'MatchExpr',
-    expr,
-    cases,
-  }
+// ── Declarations ─────────────────────────────────────────────────────────────
+
+export function letDeclaration(variable, initializer) {
+  return { kind: "LetDeclaration", variable, initializer }
 }
 
-/**
- * Creates a match case node.
- *
- * @param {object} pattern - The pattern to match
- * @param {object} expr - The expression to evaluate if pattern matches
- * @returns {object} MatchCase node
- */
-export function createMatchCase(pattern, expr) {
-  return {
-    type: 'MatchCase',
-    pattern,
-    expr,
-  }
+// A variable entity — stored in scope, referenced by Variable nodes.
+export function variable(name, type) {
+  return { kind: "Variable", name, type }
 }
 
-/**
- * Creates a pipe expression node (pipeline operator |).
- *
- * @param {array} stages - Array of expression nodes
- * @returns {object} PipeExpression node
- */
-export function createPipeExpression(stages) {
-  return {
-    type: 'PipeExpression',
-    stages,
-  }
+export function pipelineDeclaration(pipe) {
+  return { kind: "PipelineDeclaration", pipe }
 }
 
-/**
- * Creates an identifier node.
- *
- * @param {string} name - The identifier name
- * @returns {object} Identifier node
- */
-export function createIdentifier(name) {
-  return {
-    type: 'Identifier',
-    name,
-  }
+// A named pipeline entity.
+export function namedPipeline(name, pipeline, type) {
+  return { kind: "NamedPipeline", name, pipeline, type }
 }
 
-/**
- * Creates a literal value node.
- *
- * @param {*} value - The literal value
- * @param {string} kind - Literal kind ('number', 'string', 'boolean')
- * @returns {object} Literal node
- */
-export function createLiteral(value, kind) {
-  return {
-    type: 'Literal',
-    value,
-    kind,
-  }
+// ── Pipeline ──────────────────────────────────────────────────────────────────
+
+// source: the initial expression; stages: array of PipeStage nodes
+export function pipeline(source, stages) {
+  return { kind: "Pipeline", source, stages }
 }
 
-/**
- * Creates a type annotation node.
- *
- * @param {string} name - Type name
- * @param {array} typeParams - Type parameters (for generic types)
- * @returns {object} Type node
- */
-export function createType(name, typeParams = []) {
-  return {
-    type: 'Type',
-    name,
-    typeParams,
-  }
+// ── Pipe Stages ───────────────────────────────────────────────────────────────
+
+// filter { ... }  map { ... }  match { ... }  etc.
+export function namedStage(name, block) {
+  return { kind: "NamedStage", name, block }
 }
 
-/**
- * Compares two types for equality.
- *
- * @param {object} type1 - First type
- * @param {object} type2 - Second type
- * @returns {boolean} True if types are equal
- */
-export function typesEqual(type1, type2) {
-  if (type1.name !== type2.name) return false
-  if (type1.typeParams.length !== type2.typeParams.length) return false
-  return type1.typeParams.every((tp, i) => typesEqual(tp, type2.typeParams[i]))
+// A bare { ... } pattern block used directly as a pipe stage
+export function anonStage(block) {
+  return { kind: "AnonStage", block }
 }
 
-/**
- * Custom error class for semantic errors.
- */
-export class SemanticsError extends Error {
-  constructor(message, position) {
-    super(message)
-    this.name = 'SemanticsError'
-    this.position = position
-    this.isSemanticsError = true
-  }
+// A named pipe stage called with arguments: sort(key)
+export function callStage(name, args) {
+  return { kind: "CallStage", name, args }
 }
 
-/**
- * Reports an error with context information.
- *
- * @param {string} message - Error message
- * @param {number} line - Line number
- * @param {number} column - Column number
- * @returns {object} Formatted error object
- */
-export function createError(message, line, column) {
-  return {
-    message,
-    line,
-    column,
-    severity: 'error',
-  }
+// A named reference to a built-in or declared pipeline: |> collect
+export function refStage(name) {
+  return { kind: "RefStage", name }
 }
 
-/**
- * Reports a warning with context information.
- *
- * @param {string} message - Warning message
- * @param {number} line - Line number
- * @param {number} column - Column number
- * @returns {object} Formatted warning object
- */
-export function createWarning(message, line, column) {
-  return {
-    message,
-    line,
-    column,
-    severity: 'warning',
-  }
+// llm(model: "claude", prompt: "...", format: json)
+// Always produces optionalType(stringType) since model output can be none.
+export function llmStage(args) {
+  return { kind: "LLMStage", args, type: optionalType(stringType) }
 }
 
-/**
- * Formats diagnostic messages for console output.
- *
- * @param {array} errors - Array of error objects
- * @param {array} warnings - Array of warning objects
- * @returns {string} Formatted diagnostic output
- */
-export function formatDiagnostics(errors = [], warnings = []) {
-  const lines = []
+// ── Pattern Blocks ────────────────────────────────────────────────────────────
 
-  warnings.forEach(w => {
-    lines.push(`⚠ Warning at ${w.line}:${w.column}: ${w.message}`)
-  })
-
-  errors.forEach(e => {
-    lines.push(`✖ Error at ${e.line}:${e.column}: ${e.message}`)
-  })
-
-  return lines.join('\n')
+export function patternBlock(arms) {
+  return { kind: "PatternBlock", arms }
 }
+
+export function matchArm(pattern, guard, body) {
+  return { kind: "MatchArm", pattern, guard, body }
+}
+
+// Sentinel for the drop keyword in an arm body
+export const dropAction = { kind: "Drop" }
+
+// ── Patterns ──────────────────────────────────────────────────────────────────
+
+// some(x) — unwraps an optional value; binding becomes the inner value
+export function somePattern(binding) {
+  return { kind: "SomePattern", binding }
+}
+
+// none — matches the absent case of an optional
+export const nonePattern = { kind: "NonePattern" }
+
+// int(n), float(f), string(s), bool(b), list(xs)
+export function typePattern(typeName, binding) {
+  return { kind: "TypePattern", typeName, binding }
+}
+
+export function emptyListPattern() {
+  return { kind: "EmptyListPattern" }
+}
+
+export function singleListPattern(binding) {
+  return { kind: "SingleListPattern", binding }
+}
+
+export function headTailPattern(head, tail) {
+  return { kind: "HeadTailPattern", head, tail }
+}
+
+// { name: n, age: a }
+export function objectPattern(fields) {
+  return { kind: "ObjectPattern", fields }
+}
+
+// { name, age } — shorthand where field name = binding name
+export function fieldPattern(field, binding) {
+  return { kind: "FieldPattern", field, binding }
+}
+
+// Matches a specific literal value
+export function literalPattern(value) {
+  return { kind: "LiteralPattern", value }
+}
+
+// _ — matches anything, must be the last arm
+export const wildcardPattern = { kind: "WildcardPattern" }
+
+// ── Expressions ───────────────────────────────────────────────────────────────
+
+export function binary(op, left, right, type) {
+  return { kind: "BinaryExpression", op, left, right, type }
+}
+
+export function unary(op, operand, type) {
+  return { kind: "UnaryExpression", op, operand, type }
+}
+
+// x ?? default — left must be optional; result has the base type
+export function coalesce(left, right, type) {
+  return { kind: "Coalesce", left, right, type }
+}
+
+export function methodCall(object, method, args, type) {
+  return { kind: "MethodCall", object, method, args, type }
+}
+
+export function memberAccess(object, field, type) {
+  return { kind: "MemberAccess", object, field, type }
+}
+
+export function functionCall(callee, args, type) {
+  return { kind: "FunctionCall", callee, args, type }
+}
+
+export function listLiteral(elements) {
+  return { kind: "ListLiteral", elements, type: listType }
+}
+
+export function objectLiteral(fields) {
+  return { kind: "ObjectLiteral", fields, type: "Object" }
+}
+
+// llm(...) as an expression (e.g. as the body of a match arm)
+export function llmExpression(args) {
+  return { kind: "LLMExpression", args, type: optionalType(stringType) }
+}
+
+// The none literal — only valid in optional type contexts
+export const noneLiteral = { kind: "NoneLiteral" }
+
+// ── Literals (JS primitives) ──────────────────────────────────────────────────
+// Following the Carlos compiler convention:
+//   Pipethon Int    → JS BigInt
+//   Pipethon Float  → JS Number
+//   Pipethon Bool   → JS Boolean  (true / false)
+//   Pipethon String → JS String   (including quote characters)
+//
+// We monkey-patch the prototype so every expression node has a .type property.
+
+BigInt.prototype.type   = intType     // NOSONAR
+Number.prototype.type   = floatType   // NOSONAR
+Boolean.prototype.type  = boolType    // NOSONAR
+String.prototype.type   = stringType  // NOSONAR
+
+// ── Standard Library ──────────────────────────────────────────────────────────
+// Built-in pipe stage names and type names available in every program.
+
+export const standardLibrary = Object.freeze({
+  // Type names (used in TypeAnnot)
+  Int:    intType,
+  Float:  floatType,
+  String: stringType,
+  Bool:   boolType,
+  List:   listType,
+  Any:    anyType,
+
+  // Built-in pipe stages
+  print:   { kind: "BuiltinStage", name: "print",   takesBlock: false },
+  collect: { kind: "BuiltinStage", name: "collect", takesBlock: false },
+  tap:     { kind: "BuiltinStage", name: "tap",     takesBlock: false },
+  filter:  { kind: "BuiltinStage", name: "filter",  takesBlock: true  },
+  map:     { kind: "BuiltinStage", name: "map",     takesBlock: true  },
+  match:   { kind: "BuiltinStage", name: "match",   takesBlock: true  },
+  each:    { kind: "BuiltinStage", name: "each",    takesBlock: true  },
+  split:   { kind: "BuiltinStage", name: "split",   takesBlock: true  },
+})

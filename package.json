@@ -1,21 +1,19 @@
 {
   "name": "pipethon",
   "version": "0.1.0",
-  "description": "A modern programming language built for the age of intelligent systems",
+  "description": "A modern pipe-oriented, pattern-matching language built for the age of intelligent systems",
   "type": "module",
-  "main": "src/compiler.js",
+  "main": "src/pipethon.js",
   "bin": {
     "pipethon": "src/pipethon.js"
   },
-  "author": "Elias Segura, Garnik Gevorkyan, Riley Vegting",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/pipethon"
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "test"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules --test test/**/*.test.js --reporter=tap | node node_modules/tap-nyc",
-    "coverage": "c8 --reporter=text npm test",
+    "test": "c8 node --test test/**/*.test.js",
     "check": "node src/pipethon.js check",
     "parse": "node src/pipethon.js parse",
     "analyze": "node src/pipethon.js analyze",
@@ -23,11 +21,22 @@
     "generate": "node src/pipethon.js generate",
     "compile": "node src/pipethon.js compile"
   },
-  "devDependencies": {
-    "c8": "^8.0.0",
-    "tap-nyc": "^2.0.0"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/pipethon.git"
   },
+  "bugs": {
+    "url": "https://github.com/yourusername/pipethon/issues"
+  },
+  "homepage": "https://yourusername.github.io/pipethon",
+  "keywords": ["pipethon", "pipe", "pattern-matching", "ai", "compiler"],
+  "author": "Elias Segura, Garnik Gevorkyan, Riley Vegting",
+  "license": "MIT",
   "dependencies": {
+    "graph-stringify": "^1.1.0",
     "ohm-js": "^17.5.0"
+  },
+  "devDependencies": {
+    "c8": "^10.1.3"
   }
 }
