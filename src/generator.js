@@ -9,13 +9,13 @@
 //   - Pattern blocks become JS switch-like if/else chains.
 //   - none becomes JS null; Some/None unwrapping emits null checks.
 //   - Built-in stages (filter, map, collect, print, tap) emit idiomatic JS.
-
+ 
 import * as core from "./core.js"
-
+ 
 // Maps each Variable/NamedPipeline entity to its unique JS identifier.
 const names = new Map()
 let nextId = 1
-
+ 
 function jsName(entity) {
   if (!names.has(entity)) {
     const base = typeof entity === "string" ? entity : (entity.name ?? "v")
@@ -23,28 +23,33 @@ function jsName(entity) {
   }
   return names.get(entity)
 }
-
+ 
 function gen(node) {
+  // Primitive values produced by the optimizer (folded constants) or the
+  // analyzer's literal handlers need special serialization.
+  if (typeof node === "bigint")  return `${node}n`   // 42n not 42
+  if (typeof node === "boolean") return String(node)  // true/false
+  if (typeof node === "string")  return node          // already quoted by parser
   return generators?.[node?.kind]?.(node) ?? String(node)
 }
-
+ 
 const generators = {
   Program(p) {
     return p.statements.map(gen).join("\n")
   },
-
+ 
   LetDeclaration(d) {
     return `const ${jsName(d.variable)} = ${gen(d.initializer)};`
   },
-
+ 
   PipelineDeclaration(d) {
     return `// pipeline ${d.pipe.name} declared`
   },
-
+ 
   Pipeline(p) {
     // A pipeline with no stages is just the source expression.
     if (p.stages.length === 0) return gen(p.source)
-
+ 
     // Emit as a chain: stages transform the value.
     // Each stage receives the accumulated value.
     let code = gen(p.source)
@@ -53,64 +58,64 @@ const generators = {
     }
     return code
   },
-
+ 
   // ── Expressions ────────────────────────────────────────────────────────────
   BinaryExpression(e) {
     const op = e.op === "==" ? "===" : e.op === "!=" ? "!==" : e.op
     return `(${gen(e.left)} ${op} ${gen(e.right)})`
   },
-
+ 
   UnaryExpression(e) {
     return `(${e.op}${gen(e.operand)})`
   },
-
+ 
   // x ?? default  →  (x !== null && x !== undefined ? x : default)
   Coalesce(e) {
     const l = gen(e.left)
     const r = gen(e.right)
     return `(${l} != null ? ${l} : ${r})`
   },
-
+ 
   MethodCall(e) {
     const args = e.args.map(gen).join(", ")
     return `${gen(e.object)}.${e.method}(${args})`
   },
-
+ 
   MemberAccess(e) {
     return `${gen(e.object)}.${e.field}`
   },
-
+ 
   FunctionCall(e) {
     return `${e.callee}(${e.args.map(gen).join(", ")})`
   },
-
+ 
   ListLiteral(e) {
     return `[${e.elements.map(gen).join(", ")}]`
   },
-
+ 
   ObjectLiteral(e) {
     const fields = e.fields.map((f) => `${f.key}: ${gen(f.value)}`).join(", ")
     return `({ ${fields} })`
   },
-
+ 
   // llm() as an expression (e.g. in a match arm body)
   LLMExpression(e) {
     return genLLMCall(e.args)
   },
-
+ 
   // none → null in JS
   NoneLiteral(_) {
     return "null"
   },
-
+ 
   // Variable reference
   Variable(v) {
     return jsName(v)
   },
 }
-
+ 
 // ── Stage Code Generation ─────────────────────────────────────────────────────
-
+ 
 function genStage(stage, inputCode) {
   switch (stage.kind) {
     case "RefStage": {
@@ -122,26 +127,26 @@ function genStage(stage, inputCode) {
       // Named pipeline reference
       return `${name}_pipeline(${inputCode})`
     }
-
+ 
     case "CallStage": {
       const args = stage.args.map(gen).join(", ")
       return `${stage.name}(${inputCode}, ${args})`
     }
-
+ 
     case "LLMStage":
       return `await ${genLLMCall(stage.args, inputCode)}`
-
+ 
     case "NamedStage":
       return genNamedStage(stage.name, stage.block, inputCode)
-
+ 
     case "AnonStage":
       return genPatternBlockStage(null, stage.block, inputCode)
-
+ 
     default:
       return `/* unknown stage */ ${inputCode}`
   }
 }
-
+ 
 // Emit a named stage like filter { ... } or map { ... }
 function genNamedStage(name, block, inputCode) {
   switch (name) {
@@ -158,11 +163,11 @@ function genNamedStage(name, block, inputCode) {
       return `${name}(${inputCode}, ($item) => ${genPatternBlockExpr(block, "$item")})`
   }
 }
-
+ 
 function genPatternBlockStage(name, block, inputCode) {
   return genPatternBlockExpr(block, inputCode)
 }
-
+ 
 // Emit a pattern block as a JS IIFE that matches against the given value.
 function genPatternBlockExpr(block, valueCode) {
   const arms = block.arms
@@ -170,14 +175,14 @@ function genPatternBlockExpr(block, valueCode) {
     .join("\n  else ")
   return `((($v) => {\n  ${arms}\n  throw new Error("No match")\n})(${valueCode}))`
 }
-
+ 
 function genMatchArm(arm, _valueCode) {
   const test = genPatternTest(arm.pattern, "$v")
   const guard = arm.guard ? ` && (${gen(arm.guard)})` : ""
   const body = arm.body?.kind === "Drop" ? "return undefined" : `return ${gen(arm.body)}`
   return `if (${test}${guard}) { ${body} }`
 }
-
+ 
 function genPatternTest(pattern, v) {
   switch (pattern.kind) {
     case "WildcardPattern":
@@ -211,7 +216,7 @@ function genPatternTest(pattern, v) {
       return "true"
   }
 }
-
+ 
 // Emit a runtime llm() call (async).
 function genLLMCall(args, inputCode = null) {
   const argStr = args
@@ -220,7 +225,7 @@ function genLLMCall(args, inputCode = null) {
   const input = inputCode ? `, input: ${inputCode}` : ""
   return `__llm__({ ${argStr}${input} })`
 }
-
+ 
 export default function generate(program) {
   names.clear()
   nextId = 1

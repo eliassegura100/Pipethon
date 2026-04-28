@@ -203,7 +203,7 @@ function addPatternVariablesToContext(pattern, ctx) {
   // Head-tail pattern: [head, ...tail] - add both variables
   else if (pattern.kind === "HeadTailPattern") {
     ctx.add(pattern.head, { kind: "PatternVariable", type: core.anyType })
-    ctx.add(pattern.tail, { kind: "PatternVariable", type: core.arrayType })
+    ctx.add(pattern.tail, { kind: "PatternVariable", type: core.listType })
   }
   // Object pattern: { name: n, age: a } - add all bound variables
   else if (pattern.kind === "ObjectPattern") {
