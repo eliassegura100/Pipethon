@@ -143,7 +143,7 @@ Pipethon {
 
   // ── Lexical Rules ────────────────────────────────────────────────────────────
 
-  intlit   = digit+
+  intlit   = digit+ "n"?
   floatlit = digit+ "." digit+ (("e" | "E") ("+" | "-")? digit+)?
   boollit  = ("true" | "false") ~alnum
 
@@ -172,6 +172,12 @@ Pipethon {
           | "string" ~alnum
           | "bool"   ~alnum
           | "list"   ~alnum
+          | "Int"    ~alnum
+          | "Float"  ~alnum
+          | "String" ~alnum
+          | "Bool"   ~alnum
+          | "List"   ~alnum
+          | "Any"    ~alnum
           | "true"   ~alnum
           | "false"  ~alnum
 

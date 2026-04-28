@@ -73,7 +73,7 @@ describe("The analyzer", () => {
     })
 
     it("accepts a named pipeline with a pipeline type annotation", () => {
-      ok("pipeline pos: Any -> Any = filter { int(n) if n > 0n => true _ => false };")
+      ok("pipeline pos: Any -> Any = [] |> filter { int(n) if n > 0n => true _ => false };")
     })
 
     it("accepts llm() as a pipe stage with model and prompt", () => {

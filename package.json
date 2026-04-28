@@ -13,7 +13,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "c8 node --test test/**/*.test.js",
+    "test": "c8 node --test test/*.test.js",
     "check": "node src/pipethon.js check",
     "parse": "node src/pipethon.js parse",
     "analyze": "node src/pipethon.js analyze",

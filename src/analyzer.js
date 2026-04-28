@@ -173,6 +173,50 @@ function typeDesc(type) {
   return String(type)
 }
 
+// Map type names (from patterns) to actual types
+function getTypeFromName(typeName) {
+  const typeMap = {
+    "int": core.intType,
+    "string": core.stringType,
+    "bool": core.boolType,
+  }
+  return typeMap[typeName] ?? core.anyType
+}
+
+// Extract all variables from a pattern and add them to context
+function addPatternVariablesToContext(pattern, ctx) {
+  if (!pattern) return
+  
+  // Type patterns: int(n), string(s), etc. - add the variable with the correct type
+  if (pattern.kind === "TypePattern") {
+    const bindingType = getTypeFromName(pattern.typeName)
+    ctx.add(pattern.binding, { kind: "PatternVariable", type: bindingType })
+  }
+  // Some pattern: some(x) - add the variable
+  else if (pattern.kind === "SomePattern") {
+    ctx.add(pattern.binding, { kind: "PatternVariable", type: core.anyType })
+  }
+  // Single list pattern: [x] - add the variable
+  else if (pattern.kind === "SingleListPattern") {
+    ctx.add(pattern.binding, { kind: "PatternVariable", type: core.anyType })
+  }
+  // Head-tail pattern: [head, ...tail] - add both variables
+  else if (pattern.kind === "HeadTailPattern") {
+    ctx.add(pattern.head, { kind: "PatternVariable", type: core.anyType })
+    ctx.add(pattern.tail, { kind: "PatternVariable", type: core.arrayType })
+  }
+  // Object pattern: { name: n, age: a } - add all bound variables
+  else if (pattern.kind === "ObjectPattern") {
+    if (pattern.fields) {
+      for (const field of pattern.fields) {
+        if (field.binding) {
+          ctx.add(field.binding, { kind: "PatternVariable", type: core.anyType })
+        }
+      }
+    }
+  }
+}
+
 // ── Analyzer ──────────────────────────────────────────────────────────────────
 
 export default function analyze(match) {
@@ -196,7 +240,8 @@ export default function analyze(match) {
       const init = pipeline.rep()
 
       // Rule 1: none can only be assigned to an optional type
-      if (init?.kind === "NoneLiteral") {
+      // Check if the pipeline's source is a NoneLiteral
+      if (init?.source?.kind === "NoneLiteral") {
         if (declaredType === null) {
           must(
             false,
@@ -255,12 +300,12 @@ export default function analyze(match) {
         `'${name}' is not declared.`,
         { at: id }
       )
-      const blockNode = block.rep(name)  // pass stage name for drop check
+      const blockNode = block.rep()
       return core.namedStage(name, blockNode)
     },
 
     PipeStage_anonStage(block) {
-      return core.anonStage(block.rep(null))
+      return core.anonStage(block.rep())
     },
 
     PipeStage_call(id, _lp, args, _rp) {
@@ -276,7 +321,8 @@ export default function analyze(match) {
     },
 
     LLMArg(key, _colon, value) {
-      return { key: key.sourceString, value: value.rep() }
+      // value can be either strlit or id, both of which we want as strings
+      return { key: key.sourceString, value: value.sourceString }
     },
 
     // ── Pattern Blocks ────────────────────────────────────────────────────────
@@ -290,11 +336,28 @@ export default function analyze(match) {
       return core.patternBlock(armNodes)
     },
 
-    MatchArm(pattern, ifKw, guard, _arrow, body) {
+    MatchArm(pattern, ifPart, exprPart, _arrow, body) {
       const p = pattern.rep()
-      const g = guard.children.length > 0 ? guard.children[0].rep() : null
-      if (g) must.guardIsBool(g.type, { at: ifKw.children[0] ?? pattern })
+      
+      // Create a new scope for pattern variables
+      const armContext = context.newChildContext()
+      const oldContext = context
+      context = armContext
+      
+      // Add pattern variables to scope
+      addPatternVariablesToContext(p, context)
+      
+      // Now analyze guard and body in this scope
+      let g = null
+      if (exprPart.children && exprPart.children.length > 0) {
+        g = exprPart.children[0].rep()
+        must.guardIsBool(g.type, { at: ifPart.children && ifPart.children.length > 0 ? ifPart.children[0] : pattern })
+      }
       const b = body.rep()
+      
+      // Restore old context
+      context = oldContext
+      
       return core.matchArm(p, g, b)
     },
 
@@ -500,8 +563,11 @@ export default function analyze(match) {
     },
 
     // ── Literals ──────────────────────────────────────────────────────────────
-    intlit(_digits) {
-      return BigInt(this.sourceString)
+    intlit(_digits, _maybeN) {
+      const str = this.sourceString
+      // Strip the 'n' suffix for BigInt if present
+      const numStr = str.endsWith('n') ? str.slice(0, -1) : str
+      return BigInt(numStr)
     },
 
     floatlit(_whole, _dot, _frac, _e, _sign, _exp) {
