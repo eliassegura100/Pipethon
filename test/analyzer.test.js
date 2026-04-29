@@ -96,6 +96,10 @@ describe("The analyzer", () => {
       ok("let x = 2n * 3n + 4n;")
     })
 
+    it("accepts float arithmetic in a let binding", () => {
+      ok("let x = 1.5 * 2.0;")
+    })
+
     it("accepts logical not on a bool", () => {
       ok("let x = !true;")
     })

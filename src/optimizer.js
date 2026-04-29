@@ -121,7 +121,7 @@ const optimizers = {
     if (lNum) {
       if (isZero(e.left) && e.op === "+") return e.right
       if (isOne(e.left)  && e.op === "*") return e.right
-      if (isZero(e.left) && e.op === "-") return core.unary("-", e.right, e.right.type ?? core.anyType)
+      if (isZero(e.left) && e.op === "-") return core.unary("-", e.right, e.right.type)
       if (isZero(e.left) && ["*", "/"].includes(e.op)) return e.left
     }
 

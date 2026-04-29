@@ -33,7 +33,9 @@ class Context {
   }
 
   lookup(name) {
-    return this.locals.get(name) ?? this.parent?.lookup(name)
+    if (this.locals.has(name)) return this.locals.get(name)
+    if (this.parent) return this.parent.lookup(name)
+    return undefined
   }
 
   static root() {
@@ -52,8 +54,7 @@ class Context {
 
 function must(condition, message, errorLocation) {
   if (!condition) {
-    const prefix = errorLocation?.at?.source?.getLineAndColumnMessage() ?? ""
-    throw new Error(`${prefix}${message}`)
+    throw new Error(`${errorLocation.at.source.getLineAndColumnMessage()}${message}`)
   }
 }
 
@@ -184,7 +185,6 @@ function getTypeFromName(typeName) {
 
 // Extract all variables from a pattern and add them to context
 function addPatternVariablesToContext(pattern, ctx) {
-  if (!pattern) return
 
   // Type patterns: int(n), string(s), etc. - add the variable with the correct type
   if (pattern.kind === "TypePattern") {
@@ -354,7 +354,7 @@ export default function analyze(match) {
       let g = null
       if (exprPart.children && exprPart.children.length > 0) {
         g = exprPart.children[0].rep()
-        must.guardIsBool(g.type, { at: ifPart.children && ifPart.children.length > 0 ? ifPart.children[0] : pattern })
+        must.guardIsBool(g.type, { at: ifPart.children[0] })
       }
       const b = body.rep()
 
@@ -482,7 +482,7 @@ export default function analyze(match) {
     Expr4_add(left, op, right) {
       const l = left.rep()
       const r = right.rep()
-      return core.binary(op.sourceString, l, r, l.type ?? core.anyType)
+      return core.binary(op.sourceString, l, r, l.type)
     },
 
     Expr5_mul(left, op, right) {
@@ -568,10 +568,7 @@ export default function analyze(match) {
 
     // ── Literals ──────────────────────────────────────────────────────────────
     intlit(_digits, _maybeN) {
-      const str = this.sourceString
-      // Strip the 'n' suffix for BigInt if present
-      const numStr = str.endsWith('n') ? str.slice(0, -1) : str
-      return BigInt(numStr)
+      return BigInt(this.sourceString.replace(/n$/, ""))
     },
 
     floatlit(_whole, _dot, _frac, _e, _sign, _exp) {
