@@ -73,7 +73,11 @@ describe("The analyzer", () => {
     })
 
     it("accepts a named pipeline with a pipeline type annotation", () => {
-      ok("pipeline pos: Any -> Any = [] |> filter { int(n) if n > 0n => true _ => false };")
+      ok("pipeline pos: Any -> Any = [1n] |> filter { int(n) if n > 0n => true _ => false };")
+    })
+
+    it("resolves from/to types in a pipeline type annotation", () => {
+      ok("pipeline echo: Any -> Any = 42n |> print;")
     })
 
     it("accepts llm() as a pipe stage with model and prompt", () => {
@@ -142,6 +146,22 @@ describe("The analyzer", () => {
 
     it("accepts guard with && compound condition", () => {
       ok("[1n, 5n, 10n] |> filter { int(n) if n > 2n && n < 8n => true _ => false };")
+    })
+
+    it("accepts a float literal pattern", () => {
+      ok("3.14 |> { 3.14 => true _ => false };")
+    })
+
+    it("accepts a logical || in a guard condition", () => {
+      ok("[1n] |> filter { int(n) if n > 0n || n < 10n => true _ => false };")
+    })
+
+    it("accepts a parenthesized expression", () => {
+      ok("(42n) |> print;")
+    })
+
+    it("accepts drop as an arm body inside a filter stage", () => {
+      ok("[1n, 2n] |> filter { int(n) if n > 1n => drop _ => true };")
     })
   })
 
@@ -258,6 +278,30 @@ describe("The analyzer", () => {
 
     it("accepts llm() expression with model and format", () => {
       ok('"data" |> llm(model: "claude", prompt: "Extract: {input}", format: json) |> { some(s) => s none => "" };')
+    })
+  })
+
+  // ── Rule 13: drop only inside filter / map / each ─────────────────────────
+
+  describe("Rule 13 — drop is only valid in filter, map, or each", () => {
+    it("rejects drop used inside a split stage", () => {
+      err("[1n] |> split { int(n) => drop _ => 0n };", /can only be used inside/)
+    })
+
+    it("rejects drop used inside a match stage", () => {
+      err("42n |> match { int(n) => drop _ => 0n };", /can only be used inside/)
+    })
+  })
+
+  // ── == type checking ──────────────────────────────────────────────────────
+
+  describe("== operator type checking", () => {
+    it("rejects == between Int and String variables", () => {
+      err('let n: Int = 1n; let s: String = "hi"; n == s;', /Type mismatch/)
+    })
+
+    it("rejects == between optional variables of different base types", () => {
+      err("let x: String? = none; let y: Int? = none; x == y;", /Type mismatch/)
     })
   })
 })

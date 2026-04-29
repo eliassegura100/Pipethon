@@ -169,8 +169,7 @@ Object.assign(must, {
 
 function typeDesc(type) {
   if (typeof type === "string") return type
-  if (type?.kind === "OptionalType") return `${typeDesc(type.baseType)}?`
-  return String(type)
+  return `${typeDesc(type.baseType)}?`  // must be OptionalType
 }
 
 // Map type names (from patterns) to actual types
@@ -186,7 +185,7 @@ function getTypeFromName(typeName) {
 // Extract all variables from a pattern and add them to context
 function addPatternVariablesToContext(pattern, ctx) {
   if (!pattern) return
-  
+
   // Type patterns: int(n), string(s), etc. - add the variable with the correct type
   if (pattern.kind === "TypePattern") {
     const bindingType = getTypeFromName(pattern.typeName)
@@ -218,6 +217,9 @@ function addPatternVariablesToContext(pattern, ctx) {
 }
 
 // ── Analyzer ──────────────────────────────────────────────────────────────────
+
+// Tracks the name of the current named pipe stage so drop() can validate Rule 13.
+let currentStageName = null
 
 export default function analyze(match) {
   let context = Context.root()
@@ -300,7 +302,11 @@ export default function analyze(match) {
         `'${name}' is not declared.`,
         { at: id }
       )
+      // Thread stage name for Rule 13 (drop validation)
+      const prevStageName = currentStageName
+      currentStageName = name
       const blockNode = block.rep()
+      currentStageName = prevStageName
       return core.namedStage(name, blockNode)
     },
 
@@ -326,10 +332,7 @@ export default function analyze(match) {
     },
 
     // ── Pattern Blocks ────────────────────────────────────────────────────────
-    // stageName is passed through from PipeStage_namedStage for drop checking
     PatternBlock(_open, arms, _close) {
-      // The stageName is not directly available here via Ohm args, so we
-      // pass it via a convention; teams should wire this up during implementation.
       const armNodes = arms.children.map((a) => a.rep())
       must.wildcardIsLast(armNodes, { at: _open })
       must.blockIsExhaustive(armNodes, { at: _open })
@@ -338,15 +341,15 @@ export default function analyze(match) {
 
     MatchArm(pattern, ifPart, exprPart, _arrow, body) {
       const p = pattern.rep()
-      
+
       // Create a new scope for pattern variables
       const armContext = context.newChildContext()
       const oldContext = context
       context = armContext
-      
+
       // Add pattern variables to scope
       addPatternVariablesToContext(p, context)
-      
+
       // Now analyze guard and body in this scope
       let g = null
       if (exprPart.children && exprPart.children.length > 0) {
@@ -354,10 +357,10 @@ export default function analyze(match) {
         must.guardIsBool(g.type, { at: ifPart.children && ifPart.children.length > 0 ? ifPart.children[0] : pattern })
       }
       const b = body.rep()
-      
+
       // Restore old context
       context = oldContext
-      
+
       return core.matchArm(p, g, b)
     },
 
@@ -466,6 +469,7 @@ export default function analyze(match) {
     Expr2_eq(left, op, right) {
       const l = left.rep()
       const r = right.rep()
+      must.haveSameType(l.type, r.type, { at: op })
       return core.binary(op.sourceString, l, r, core.boolType)
     },
 
@@ -582,18 +586,12 @@ export default function analyze(match) {
       return this.sourceString === "true"
     },
 
-    drop(_) {
+    // Rule 13: drop is only valid inside filter, map, or each
+    drop(_kw) {
+      must.dropOnlyInFilterOrMap(currentStageName, { at: _kw })
       return core.dropAction
     },
 
-    // ── Passthroughs ──────────────────────────────────────────────────────────
-    _terminal() {
-      return this.sourceString
-    },
-
-    _iter(...children) {
-      return children.map((c) => c.rep())
-    },
   })
 
   return builder(match).rep()
