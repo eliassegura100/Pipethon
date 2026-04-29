@@ -247,4 +247,104 @@ describe("The generator", () => {
       assert.ok(out.includes("console.log"), `Missing console.log\nGot:\n${out}`)
     })
   })
+ 
+  // ── Member access ─────────────────────────────────────────────────────────
+ 
+  describe("member access", () => {
+    it("emits dot-field access without parentheses", () => {
+      has('"hello" |> { string(s) => s.length _ => 0n };', ".length")
+    })
+  })
+ 
+  // ── tap stage ────────────────────────────────────────────────────────────
+ 
+  describe("tap stage", () => {
+    it("emits console.log for |> tap (like print but non-terminating)", () => {
+      has("[1n, 2n] |> tap;", "console.log")
+    })
+  })
+ 
+  // ── match named stage ─────────────────────────────────────────────────────
+ 
+  describe("match named stage", () => {
+    it("emits a pattern block expression for |> match { ... }", () => {
+      has('42n |> match { int(n) => n _ => 0n };', 'typeof $v === "bigint"')
+    })
+  })
+ 
+  // ── single element list pattern ───────────────────────────────────────────
+ 
+  describe("single element list pattern", () => {
+    it("emits Array.isArray + length === 1 for [x] pattern", () => {
+      has("[42n] |> { [x] => x _ => 0n };", ".length === 1")
+    })
+  })
+ 
+  // ── LLM expression in match arm body ─────────────────────────────────────
+ 
+  describe("llm expression in arm body", () => {
+    it("emits __llm__ when llm() appears as an arm body expression", () => {
+      has(
+        '"query" |> { string(s) => llm(model: "claude", prompt: "{input}") _ => none };',
+        "__llm__("
+      )
+    })
+  })
+ 
+  // ── drop arm body ─────────────────────────────────────────────────────────
+ 
+  describe("drop arm body", () => {
+    it("emits 'return undefined' for a drop arm body", () => {
+      has(
+        "[1n, 2n] |> filter { int(n) if n > 1n => drop _ => true };",
+        "return undefined"
+      )
+    })
+  })
+ 
+  // ── FunctionCall expression ───────────────────────────────────────────────
+ 
+  describe("function call expression", () => {
+    it("emits callee(args) for a function call in expression position", () => {
+      has("let x = print(42n);", "print(42n)")
+    })
+  })
+ 
+  // ── Named pipeline as ref stage ───────────────────────────────────────────
+ 
+  describe("named pipeline ref stage", () => {
+    it("emits name_pipeline(input) for a declared pipeline used as a ref stage", () => {
+      has(
+        "pipeline doubles = [1n, 2n] |> map { int(n) => n * 2n _ => 0n }; [3n] |> doubles;",
+        "doubles_pipeline("
+      )
+    })
+  })
+ 
+  // ── Call stage (id with args) ─────────────────────────────────────────────
+ 
+  describe("call stage", () => {
+    it("emits name(input, args) for a |> id(args) pipe stage", () => {
+      has("[1n] |> print(42n);", "print(")
+    })
+  })
+ 
+  // ── Split named stage ─────────────────────────────────────────────────────
+ 
+  describe("split named stage", () => {
+    it("emits /* split */ comment for |> split { ... }", () => {
+      has("[1n] |> split { int(n) => n _ => 0n };", "/* split */")
+    })
+  })
+ 
+  // ── User-declared pipeline as named stage ─────────────────────────────────
+ 
+  describe("user-declared pipeline as named stage", () => {
+    it("emits name(input, callback) for a declared pipeline used with a block", () => {
+      has(
+        "pipeline myPipe = [1n] |> map { int(n) => n _ => 0n }; [2n] |> myPipe { int(n) => n _ => 0n };",
+        "myPipe("
+      )
+    })
+  })
 })

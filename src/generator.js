@@ -18,7 +18,7 @@ let nextId = 1
  
 function jsName(entity) {
   if (!names.has(entity)) {
-    const base = typeof entity === "string" ? entity : (entity.name ?? "v")
+    const base = typeof entity === "string" ? entity : entity.name
     names.set(entity, `${base}_${nextId++}`)
   }
   return names.get(entity)
@@ -141,9 +141,6 @@ function genStage(stage, inputCode) {
  
     case "AnonStage":
       return genPatternBlockStage(null, stage.block, inputCode)
- 
-    default:
-      return `/* unknown stage */ ${inputCode}`
   }
 }
  
@@ -198,7 +195,6 @@ function genPatternTest(pattern, v) {
         case "string": return `typeof ${v} === "string"`
         case "bool":   return `typeof ${v} === "boolean"`
         case "list":   return `Array.isArray(${v})`
-        default:       return "true"
       }
     case "LiteralPattern":
       return `${v} === ${gen(pattern.value)}`
@@ -212,15 +208,13 @@ function genPatternTest(pattern, v) {
       return pattern.fields
         .map((f) => `${v}.hasOwnProperty("${f.field}")`)
         .join(" && ")
-    default:
-      return "true"
   }
 }
  
 // Emit a runtime llm() call (async).
 function genLLMCall(args, inputCode = null) {
   const argStr = args
-    .map((a) => `${a.key}: ${typeof a.value === "string" ? a.value : gen(a.value)}`)
+    .map((a) => `${a.key}: ${a.value}`)
     .join(", ")
   const input = inputCode ? `, input: ${inputCode}` : ""
   return `__llm__({ ${argStr}${input} })`
