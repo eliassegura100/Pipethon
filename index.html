@@ -513,12 +513,10 @@
             <span class="code-dot" style="background:#28c840;"></span>
             <span class="example-title" style="margin-left:10px;">hello_world.pipe</span>
           </div>
-          <span class="example-tag">basic pipeline</span>
+          <span class="example-tag">let + pipeline operator</span>
         </div>
-        <pre><span class="cm"># Example 1: Hello World — the simplest Pipethon program</span>
-<span class="kw">pipeline</span> <span class="fn">main</span>():
-  <span class="str">"Hello, World!"</span>
-    <span class="op">|></span> <span class="fn">print</span></pre>
+        <pre><span class="cm">// Example 1: Hello World — a let binding piped to print</span>
+<span class="kw">let</span> <span class="fn">greeting</span> = <span class="str">"Hello, World!"</span> <span class="op">|></span> <span class="fn">print</span>;</pre>
       </div>
 
       <!-- Example 2 -->
@@ -530,21 +528,18 @@
             <span class="code-dot" style="background:#28c840;"></span>
             <span class="example-title" style="margin-left:10px;">grade_checker.pipe</span>
           </div>
-          <span class="example-tag">pattern matching on values</span>
+          <span class="example-tag">pattern matching + guards</span>
         </div>
-        <pre><span class="cm"># Example 2: Pattern matching on numeric values with guards</span>
-<span class="kw">pipeline</span> <span class="fn">grade</span>(<span class="ty">score</span>: <span class="ty">Int</span>) -> <span class="ty">String</span>:
-  score <span class="op">|></span> <span class="kw">match</span>:
-    <span class="ty">n</span> <span class="kw">if</span> n >= <span class="num">90</span> <span class="op">-></span> <span class="str">"A"</span>
-    <span class="ty">n</span> <span class="kw">if</span> n >= <span class="num">80</span> <span class="op">-></span> <span class="str">"B"</span>
-    <span class="ty">n</span> <span class="kw">if</span> n >= <span class="num">70</span> <span class="op">-></span> <span class="str">"C"</span>
-    <span class="ty">n</span> <span class="kw">if</span> n >= <span class="num">60</span> <span class="op">-></span> <span class="str">"D"</span>
-    <span class="ty">_</span>           <span class="op">-></span> <span class="str">"F"</span>
+        <pre><span class="cm">// Example 2: Pattern matching on values with if-guards</span>
+<span class="kw">pipeline</span> <span class="fn">grade</span> : <span class="ty">Int</span> -> <span class="ty">String</span> = {
+  n <span class="kw">if</span> n >= <span class="num">90</span> => <span class="str">"A"</span>
+  n <span class="kw">if</span> n >= <span class="num">80</span> => <span class="str">"B"</span>
+  n <span class="kw">if</span> n >= <span class="num">70</span> => <span class="str">"C"</span>
+  n <span class="kw">if</span> n >= <span class="num">60</span> => <span class="str">"D"</span>
+  _           => <span class="str">"F"</span>
+};
 
-<span class="kw">pipeline</span> <span class="fn">main</span>():
-  <span class="num">85</span> <span class="op">|></span> <span class="fn">grade</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># prints "B"</span>
-  <span class="num">72</span> <span class="op">|></span> <span class="fn">grade</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># prints "C"</span>
-  <span class="num">55</span> <span class="op">|></span> <span class="fn">grade</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># prints "F"</span></pre>
+<span class="kw">let</span> <span class="fn">result</span> = <span class="num">85</span> <span class="op">|></span> <span class="fn">grade</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// prints "B"</span></pre>
       </div>
 
       <!-- Example 3 -->
@@ -558,20 +553,19 @@
           </div>
           <span class="example-tag">type matching</span>
         </div>
-        <pre><span class="cm"># Example 3: Dispatching behavior based on the type of a value</span>
-<span class="kw">pipeline</span> <span class="fn">describe</span>(<span class="ty">val</span>: <span class="ty">Any</span>) -> <span class="ty">String</span>:
-  val <span class="op">|></span> <span class="kw">match</span>:
-    <span class="ty">Int</span>    <span class="op">-></span> <span class="str">"It's an integer"</span>
-    <span class="ty">Float</span>  <span class="op">-></span> <span class="str">"It's a float"</span>
-    <span class="ty">String</span> <span class="op">-></span> <span class="str">"It's a string"</span>
-    <span class="ty">List</span>   <span class="op">-></span> <span class="str">"It's a list"</span>
-    <span class="ty">Bool</span>   <span class="op">-></span> <span class="str">"It's a boolean"</span>
-    <span class="ty">_</span>      <span class="op">-></span> <span class="str">"Unknown type"</span>
+        <pre><span class="cm">// Example 3: Dispatching on runtime type using typePat patterns</span>
+<span class="kw">pipeline</span> <span class="fn">describe</span> : <span class="ty">Any</span> -> <span class="ty">String</span> = {
+  <span class="ty">int</span>(v)    => <span class="str">"It's an integer"</span>
+  <span class="ty">float</span>(v)  => <span class="str">"It's a float"</span>
+  <span class="ty">string</span>(v) => <span class="str">"It's a string"</span>
+  <span class="ty">list</span>(v)   => <span class="str">"It's a list"</span>
+  <span class="ty">bool</span>(v)   => <span class="str">"It's a boolean"</span>
+  _         => <span class="str">"Unknown type"</span>
+};
 
-<span class="kw">pipeline</span> <span class="fn">main</span>():
-  <span class="num">42</span>          <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># "It's an integer"</span>
-  <span class="str">"pipethon"</span>  <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># "It's a string"</span>
-  [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]   <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># "It's a list"</span></pre>
+<span class="num">42</span>         <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "It's an integer"</span>
+<span class="str">"pipethon"</span> <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "It's a string"</span>
+[<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]  <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "It's a list"</span></pre>
       </div>
 
       <!-- Example 4 -->
@@ -581,27 +575,24 @@
             <span class="code-dot" style="background:#ff5f57;"></span>
             <span class="code-dot" style="background:#febc2e;"></span>
             <span class="code-dot" style="background:#28c840;"></span>
-            <span class="example-title" style="margin-left:10px;">text_processor.pipe</span>
+            <span class="example-title" style="margin-left:10px;">null_coalesce.pipe</span>
           </div>
-          <span class="example-tag">multi-stage pipeline</span>
+          <span class="example-tag">optionals + ?? + some/none</span>
         </div>
-        <pre><span class="cm"># Example 4: Composing multiple pipelines for text processing</span>
-<span class="kw">pipeline</span> <span class="fn">normalize</span>(<span class="ty">text</span>: <span class="ty">String</span>) -> <span class="ty">String</span>:
-  text
-    <span class="op">|></span> <span class="fn">trim</span>
-    <span class="op">|></span> <span class="fn">lowercase</span>
-    <span class="op">|></span> <span class="fn">remove_punctuation</span>
+        <pre><span class="cm">// Example 4: Optional types, some/none patterns, and ?? coalescing</span>
+<span class="kw">pipeline</span> <span class="fn">greetUser</span> : <span class="ty">String?</span> -> <span class="ty">String</span> = {
+  <span class="fn">some</span>(name) => <span class="fn">concat</span>(<span class="str">"Hello, "</span>, name)
+  <span class="fn">none</span>       => <span class="str">"Hello, stranger"</span>
+};
 
-<span class="kw">pipeline</span> <span class="fn">word_count</span>(<span class="ty">text</span>: <span class="ty">String</span>) -> <span class="ty">Int</span>:
-  text
-    <span class="op">|></span> <span class="fn">normalize</span>
-    <span class="op">|></span> <span class="fn">split</span>(<span class="str">" "</span>)
-    <span class="op">|></span> <span class="fn">length</span>
+<span class="kw">let</span> <span class="fn">username</span> : <span class="ty">String?</span> = <span class="fn">none</span>;
+<span class="kw">let</span> <span class="fn">display</span>  : <span class="ty">String?</span> = <span class="fn">none</span>;
 
-<span class="kw">pipeline</span> <span class="fn">main</span>():
-  <span class="str">"  Hello, World! This is Pipethon.  "</span>
-    <span class="op">|></span> <span class="fn">word_count</span>
-    <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># prints 4</span></pre>
+<span class="cm">// ?? falls back to the right-hand value if the left is none</span>
+<span class="kw">let</span> <span class="fn">name</span> = username ?? <span class="str">"guest"</span>;
+<span class="kw">let</span> <span class="fn">msg</span>  = display  ?? <span class="fn">greetUser</span>;
+
+name <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "guest"</span></pre>
       </div>
 
       <!-- Example 5 -->
@@ -613,28 +604,26 @@
             <span class="code-dot" style="background:#28c840;"></span>
             <span class="example-title" style="margin-left:10px;">ai_query_handler.pipe</span>
           </div>
-          <span class="example-tag">AI pipeline + intent matching</span>
+          <span class="example-tag">llm() + pattern matching + pipelines</span>
         </div>
-        <pre><span class="cm"># Example 5: Full AI pipeline — classify user intent and route to handler</span>
-<span class="kw">pipeline</span> <span class="fn">handle_query</span>(<span class="ty">query</span>: <span class="ty">String</span>) -> <span class="ty">Response</span>:
-  query
-    <span class="op">|></span> <span class="fn">sanitize</span>
-    <span class="op">|></span> <span class="fn">embed</span>
-    <span class="op">|></span> <span class="fn">ai_classify</span>(model=<span class="str">"fast"</span>)
-    <span class="op">|></span> <span class="kw">match</span>:
-        <span class="ty">Intent.Question</span>(confidence > <span class="num">0.8</span>) <span class="op">-></span> <span class="fn">answer_pipeline</span>
-        <span class="ty">Intent.Task</span>                          <span class="op">-></span> <span class="fn">task_pipeline</span>
-        <span class="ty">Intent.Ambiguous</span>                     <span class="op">-></span> <span class="fn">clarify</span>(<span class="str">"Could you rephrase?"</span>)
-        <span class="ty">_</span>                                    <span class="op">-></span> <span class="fn">fallback</span>
+        <pre><span class="cm">// Example 5: Full AI pipeline — llm() stage, pattern match, null coalesce</span>
+<span class="kw">pipeline</span> <span class="fn">classify</span> : <span class="ty">String</span> -> <span class="ty">String</span> =
+  <span class="fn">sanitize</span>
+  <span class="op">|></span> <span class="fn">llm</span>(model: <span class="str">"claude"</span>, prompt: <span class="str">"Classify intent: {input}"</span>)
+  <span class="op">|></span> {
+    <span class="fn">some</span>(label) => label
+    <span class="fn">none</span>         => <span class="str">"unknown"</span>
+  };
 
-<span class="kw">pipeline</span> <span class="fn">answer_pipeline</span>(<span class="ty">intent</span>: <span class="ty">Intent</span>) -> <span class="ty">Response</span>:
-  intent
-    <span class="op">|></span> <span class="fn">retrieve_context</span>
-    <span class="op">|></span> <span class="fn">ai_generate</span>(model=<span class="str">"deep"</span>, temperature=<span class="num">0.4</span>)
-    <span class="op">|></span> <span class="fn">format_response</span>
+<span class="kw">pipeline</span> <span class="fn">handleQuery</span> : <span class="ty">String</span> -> <span class="ty">String</span> =
+  <span class="fn">classify</span>
+  <span class="op">|></span> {
+    <span class="str">"question"</span> => <span class="fn">answerPipeline</span>
+    <span class="str">"task"</span>     => <span class="fn">taskPipeline</span>
+    _          => <span class="fn">clarify</span>
+  };
 
-<span class="kw">pipeline</span> <span class="fn">main</span>():
-  <span class="str">"What is Pipethon?"</span> <span class="op">|></span> <span class="fn">handle_query</span> <span class="op">|></span> <span class="fn">print</span></pre>
+<span class="str">"What is Pipethon?"</span> <span class="op">|></span> <span class="fn">handleQuery</span> <span class="op">|></span> <span class="fn">print</span>;</pre>
       </div>
 
     </div>
