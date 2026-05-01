@@ -24,7 +24,6 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -36,7 +35,7 @@
       overflow-x: hidden;
     }
 
-    /* ---- NAV ---- */
+    /* NAV */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -44,31 +43,28 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 48px;
-      background: rgba(13,13,20,0.85);
+      padding: 14px 48px;
+      background: rgba(13,13,20,0.88);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
 
     .nav-brand {
       font-family: var(--logo-font);
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: 0px;
+      font-size: 17px;
+      font-weight: 900;
       color: var(--accent2);
       text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
 
     .nav-snake {
       width: 38px;
       height: 38px;
       object-fit: cover;
-      object-position: 50% 30%;
       border-radius: 50%;
-
       transform: scale(2);
       transform-origin: center 35%;
       clip-path: circle(42% at 50% 35%);
@@ -76,21 +72,31 @@
 
     .nav-links {
       display: flex;
-      gap: 32px;
+      gap: 28px;
       list-style: none;
     }
 
     .nav-links a {
       color: var(--text2);
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 400;
+      font-size: 13px;
       transition: color 0.2s;
     }
 
     .nav-links a:hover { color: var(--text); }
 
-    /* ---- HERO ---- */
+    .nav-links .github-link {
+      color: var(--accent2);
+      border: 1px solid rgba(34,201,122,0.35);
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+
+    .nav-links .github-link:hover { background: rgba(34,201,122,0.1); color: var(--accent2); }
+
+    /* HERO */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -110,6 +116,17 @@
       background:
         radial-gradient(ellipse 60% 50% at 50% 0%, rgba(34,201,122,0.18) 0%, transparent 70%),
         radial-gradient(ellipse 40% 30% at 80% 80%, rgba(74,222,150,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(34,201,122,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,201,122,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at 50% 0%, black 20%, transparent 70%);
       pointer-events: none;
     }
 
@@ -144,6 +161,7 @@
       font-family: var(--logo-font);
       font-size: clamp(42px, 7vw, 88px);
       font-weight: 900;
+      line-height: 1.0;
       letter-spacing: -1px;
       color: var(--text);
       margin-bottom: 16px;
@@ -191,42 +209,12 @@
       transition: all 0.2s;
     }
 
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      border: 1px solid var(--accent);
-    }
+    .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
+    .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--accent2); border: 1px solid rgba(34,201,122,0.4); }
+    .btn-outline:hover { background: rgba(34,201,122,0.1); transform: translateY(-1px); }
 
-    .btn-primary:hover {
-      background: var(--accent2);
-      border-color: var(--accent2);
-      transform: translateY(-1px);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--accent2);
-      border: 1px solid rgba(34,201,122,0.4);
-    }
-
-    .btn-outline:hover {
-      background: rgba(34,201,122,0.1);
-      transform: translateY(-1px);
-    }
-
-    /* ---- GRID BG DECORATION ---- */
-    .grid-bg {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(34,201,122,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(34,201,122,0.04) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: radial-gradient(ellipse at 50% 0%, black 20%, transparent 70%);
-      pointer-events: none;
-    }
-
-    /* ---- SECTION COMMON ---- */
+    /* SECTIONS */
     section {
       padding: 96px 48px;
       max-width: 1100px;
@@ -248,11 +236,22 @@
       font-weight: 700;
       letter-spacing: -1px;
       color: var(--text);
-      margin-bottom: 48px;
+      margin-bottom: 32px;
       line-height: 1.1;
     }
 
-    /* ---- FEATURES ---- */
+    /* STORY */
+    .story-text p {
+      font-size: 16px;
+      color: var(--text2);
+      line-height: 1.85;
+      max-width: 780px;
+      margin-bottom: 20px;
+    }
+
+    .story-text p:last-child { margin-bottom: 0; }
+
+    /* FEATURES */
     .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -267,14 +266,10 @@
       transition: border-color 0.25s, transform 0.25s;
     }
 
-    .feature-card:hover {
-      border-color: rgba(34,201,122,0.45);
-      transform: translateY(-3px);
-    }
+    .feature-card:hover { border-color: rgba(34,201,122,0.45); transform: translateY(-3px); }
 
     .feature-icon {
-      width: 44px;
-      height: 44px;
+      width: 44px; height: 44px;
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -282,9 +277,9 @@
       margin-bottom: 18px;
     }
 
-    .icon-purple { background: rgba(34,201,122,0.12); }
-    .icon-teal   { background: rgba(93,202,165,0.12); }
-    .icon-coral  { background: rgba(216,90,48,0.12); }
+    .icon-green { background: rgba(34,201,122,0.12); }
+    .icon-teal  { background: rgba(93,202,165,0.12); }
+    .icon-amber { background: rgba(239,159,39,0.12); }
 
     .feature-card h3 {
       font-family: var(--display);
@@ -294,46 +289,52 @@
       margin-bottom: 8px;
     }
 
-    .feature-card p {
-      font-size: 14px;
-      color: var(--text2);
-      line-height: 1.7;
-    }
+    .feature-card p { font-size: 14px; color: var(--text2); line-height: 1.7; }
 
-    /* ---- CODE SECTION ---- */
-    .code-section {
+    /* EXAMPLES */
+    .examples-stack { display: flex; flex-direction: column; gap: 28px; }
+
+    .example-block {
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 16px;
       overflow: hidden;
     }
 
-    .code-header {
+    .example-label {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 14px 20px;
+      justify-content: space-between;
+      padding: 13px 20px;
       border-bottom: 1px solid var(--border);
       background: var(--bg3);
     }
 
-    .code-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
+    .example-title {
+      font-family: var(--display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
     }
 
-    .code-title {
+    .example-tag {
       font-family: var(--mono);
-      font-size: 12px;
-      color: var(--text2);
-      margin-left: 8px;
+      font-size: 11px;
+      color: var(--accent3);
+      background: rgba(34,201,122,0.1);
+      border: 1px solid rgba(34,201,122,0.2);
+      padding: 3px 10px;
+      border-radius: 100px;
     }
+
+    .code-dots { display: flex; gap: 6px; align-items: center; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
 
     pre {
-      padding: 28px 32px;
+      padding: 22px 28px;
       overflow-x: auto;
       font-family: var(--mono);
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.9;
     }
 
@@ -343,31 +344,29 @@
     .op  { color: #89dceb; }
     .cm  { color: #585878; font-style: italic; }
     .ty  { color: #f9e2af; }
+    .num { color: #fab387; }
 
-    /* ---- TEAM ---- */
+    /* TEAM */
     .team-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
     }
 
     .team-card {
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 28px 24px;
-      text-align: center;
+      padding: 28px;
       transition: border-color 0.25s, transform 0.25s;
     }
 
-    .team-card:hover {
-      border-color: rgba(34,201,122,0.4);
-      transform: translateY(-3px);
-    }
+    .team-card:hover { border-color: rgba(34,201,122,0.4); transform: translateY(-3px); }
+
+    .team-top { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
 
     .avatar {
-      width: 60px;
-      height: 60px;
+      width: 56px; height: 56px;
       border-radius: 50%;
       background: rgba(34,201,122,0.12);
       border: 1px solid rgba(34,201,122,0.3);
@@ -375,26 +374,17 @@
       align-items: center;
       justify-content: center;
       font-family: var(--display);
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--accent2);
-      margin: 0 auto 14px;
+      flex-shrink: 0;
     }
 
-    .team-card h3 {
-      font-family: var(--display);
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
+    .team-card h3 { font-family: var(--display); font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .team-role { font-size: 12px; color: var(--accent3); font-family: var(--mono); }
+    .team-bio { font-size: 14px; color: var(--text2); line-height: 1.7; }
 
-    .team-card p {
-      font-size: 12px;
-      color: var(--text2);
-    }
-
-    /* ---- FOOTER ---- */
+    /* FOOTER */
     footer {
       border-top: 1px solid var(--border);
       padding: 36px 48px;
@@ -405,44 +395,25 @@
       gap: 12px;
     }
 
-    footer .brand {
-      font-family: var(--display);
-      font-weight: 800;
-      font-size: 16px;
-      color: var(--accent2);
-    }
+    footer .brand { font-family: var(--logo-font); font-weight: 900; font-size: 16px; color: var(--accent2); }
+    footer p { font-size: 13px; color: var(--text2); }
+    footer a { color: var(--accent2); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
 
-    footer p {
-      font-size: 13px;
-      color: var(--text2);
-    }
-
-    footer a {
-      color: var(--accent2);
-      text-decoration: none;
-    }
-
-    /* ---- ANIMATIONS ---- */
+    /* ANIMATIONS */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ---- RESPONSIVE ---- */
+    /* RESPONSIVE */
     @media (max-width: 700px) {
-      nav { padding: 16px 20px; }
-      .nav-links { gap: 18px; }
+      nav { padding: 14px 20px; }
+      .nav-links { gap: 14px; }
+      .nav-links li:not(:last-child) { display: none; }
       section { padding: 72px 20px; }
       footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
     }
@@ -453,14 +424,15 @@
   <!-- NAV -->
   <nav>
     <a href="#" class="nav-brand">
-      <img src="assets/Pipethon_Web_logo.png" alt="Pipethon snake" class="nav-snake" />
+      <img src="assets/logo.png" alt="Pipethon snake" class="nav-snake" />
       Pipethon
     </a>
     <ul class="nav-links">
+      <li><a href="#story">About</a></li>
       <li><a href="#features">Features</a></li>
-      <li><a href="#syntax">Syntax</a></li>
+      <li><a href="#examples">Examples</a></li>
       <li><a href="#team">Team</a></li>
-      <li><a href="https://github.com/eliassegura100/Pipethon" target="_blank">GitHub ↗</a></li>
+      <li><a href="https://github.com/eliassegura100/Pipethon" target="_blank" class="github-link">GitHub ↗</a></li>
     </ul>
   </nav>
 
@@ -471,23 +443,39 @@
     <h1>Pipe<span>thon</span></h1>
     <p class="tagline">Flow &nbsp;·&nbsp; Match &nbsp;·&nbsp; Think</p>
     <p class="hero-desc">
-      A modern programming language built for intelligent systems.
-      Pipeline composition and pattern matching, designed for AI-powered
-      applications — without the boilerplate.
+      A modern programming language built for the age of intelligent systems —
+      designed around pipeline composition and pattern matching.
     </p>
     <div class="hero-btns">
-      <a class="btn btn-primary" href="#syntax">See the syntax</a>
+      <a class="btn btn-primary" href="#examples">See examples</a>
       <a class="btn btn-outline" href="https://github.com/eliassegura100/Pipethon" target="_blank">View on GitHub</a>
     </div>
   </div>
 
+  <!-- STORY -->
+  <section id="story">
+    <p class="section-label reveal">The language</p>
+    <h2 class="section-title reveal">Why we built Pipethon.</h2>
+    <div class="story-text">
+      <p class="reveal">
+        Pipethon was born out of frustration with the complexity of building AI-powered applications in traditional languages. When working with large language models and data transformation pipelines, developers face deeply nested callbacks, brittle string parsing, and unpredictable output — Pipethon was designed to solve all three at once. By centering the language around two core primitives — <strong style="color: var(--text)">pipeline composition</strong> and <strong style="color: var(--text)">pattern matching</strong> — Pipethon turns what used to be messy, hard-to-read code into clear, expressive programs that tell a story from input to output.
+      </p>
+      <p class="reveal">
+        In Pipethon, every program is a series of transformations. Data flows through stages using the <code style="font-family: var(--mono); color: var(--accent2); font-size: 14px;">|></code> operator, where each stage receives the output of the last, reshapes it, routes it, or passes it along. This pipeline-first design eliminates the tangled control flow that plagues most AI application code and makes programs dramatically easier to read, test, and maintain. There are no deeply nested conditionals, no fragile string manipulation — just clean, readable pipelines.
+      </p>
+      <p class="reveal">
+        At every stage, Pipethon's pattern matching lets you describe what your data looks like and what should happen to it — by type, by shape, by value, or by structure. When an AI model returns unpredictable output, pattern matching tames it. When a pipeline needs to branch based on confidence scores or intent classification, pattern matching routes it elegantly. Pipethon is not just a language for writing AI apps — it's a language that thinks the way AI pipelines actually work.
+      </p>
+    </div>
+  </section>
+
   <!-- FEATURES -->
-  <section id="features">
+  <section id="features" style="padding-top: 0;">
     <p class="section-label reveal">Why Pipethon</p>
     <h2 class="section-title reveal">Built different,<br>by design.</h2>
     <div class="features-grid">
       <div class="feature-card reveal">
-        <div class="feature-icon icon-purple">
+        <div class="feature-icon icon-green">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4ade96" stroke-width="1.8"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
         <h3>Pipeline composition</h3>
@@ -501,7 +489,7 @@
         <p>Match by type, shape, value, or structure. Tame unpredictable AI output, route branches cleanly, and validate data with elegance.</p>
       </div>
       <div class="feature-card reveal">
-        <div class="feature-icon icon-coral">
+        <div class="feature-icon icon-amber">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef9f27" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
         </div>
         <h3>AI-native primitives</h3>
@@ -510,65 +498,202 @@
     </div>
   </section>
 
-  <!-- SYNTAX -->
-  <section id="syntax" style="padding-top: 0;">
-    <p class="section-label reveal">Syntax</p>
-    <h2 class="section-title reveal">Readable by design.</h2>
-    <div class="code-section reveal">
-      <div class="code-header">
-        <span class="code-dot" style="background:#ff5f57;"></span>
-        <span class="code-dot" style="background:#febc2e;"></span>
-        <span class="code-dot" style="background:#28c840;"></span>
-        <span class="code-title">query_handler.pipe</span>
+  <!-- EXAMPLES -->
+  <section id="examples" style="padding-top: 0;">
+    <p class="section-label reveal">Examples</p>
+    <h2 class="section-title reveal">The language in action.</h2>
+    <div class="examples-stack">
+
+      <!-- Example 1 -->
+      <div class="example-block reveal">
+        <div class="example-label">
+          <div class="code-dots">
+            <span class="code-dot" style="background:#ff5f57;"></span>
+            <span class="code-dot" style="background:#febc2e;"></span>
+            <span class="code-dot" style="background:#28c840;"></span>
+            <span class="example-title" style="margin-left:10px;">hello_world.pipe</span>
+          </div>
+          <span class="example-tag">basic pipeline</span>
+        </div>
+        <pre><span class="cm"># Example 1: Hello World — the simplest Pipethon program</span>
+<span class="kw">pipeline</span> <span class="fn">main</span>():
+  <span class="str">"Hello, World!"</span>
+    <span class="op">|></span> <span class="fn">print</span></pre>
       </div>
-      <pre><span class="cm"># Define a pipeline that processes user queries</span>
+
+      <!-- Example 2 -->
+      <div class="example-block reveal">
+        <div class="example-label">
+          <div class="code-dots">
+            <span class="code-dot" style="background:#ff5f57;"></span>
+            <span class="code-dot" style="background:#febc2e;"></span>
+            <span class="code-dot" style="background:#28c840;"></span>
+            <span class="example-title" style="margin-left:10px;">grade_checker.pipe</span>
+          </div>
+          <span class="example-tag">pattern matching on values</span>
+        </div>
+        <pre><span class="cm"># Example 2: Pattern matching on numeric values with guards</span>
+<span class="kw">pipeline</span> <span class="fn">grade</span>(<span class="ty">score</span>: <span class="ty">Int</span>) -> <span class="ty">String</span>:
+  score <span class="op">|></span> <span class="kw">match</span>:
+    <span class="ty">n</span> <span class="kw">if</span> n >= <span class="num">90</span> <span class="op">-></span> <span class="str">"A"</span>
+    <span class="ty">n</span> <span class="kw">if</span> n >= <span class="num">80</span> <span class="op">-></span> <span class="str">"B"</span>
+    <span class="ty">n</span> <span class="kw">if</span> n >= <span class="num">70</span> <span class="op">-></span> <span class="str">"C"</span>
+    <span class="ty">n</span> <span class="kw">if</span> n >= <span class="num">60</span> <span class="op">-></span> <span class="str">"D"</span>
+    <span class="ty">_</span>           <span class="op">-></span> <span class="str">"F"</span>
+
+<span class="kw">pipeline</span> <span class="fn">main</span>():
+  <span class="num">85</span> <span class="op">|></span> <span class="fn">grade</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># prints "B"</span>
+  <span class="num">72</span> <span class="op">|></span> <span class="fn">grade</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># prints "C"</span>
+  <span class="num">55</span> <span class="op">|></span> <span class="fn">grade</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># prints "F"</span></pre>
+      </div>
+
+      <!-- Example 3 -->
+      <div class="example-block reveal">
+        <div class="example-label">
+          <div class="code-dots">
+            <span class="code-dot" style="background:#ff5f57;"></span>
+            <span class="code-dot" style="background:#febc2e;"></span>
+            <span class="code-dot" style="background:#28c840;"></span>
+            <span class="example-title" style="margin-left:10px;">type_dispatch.pipe</span>
+          </div>
+          <span class="example-tag">type matching</span>
+        </div>
+        <pre><span class="cm"># Example 3: Dispatching behavior based on the type of a value</span>
+<span class="kw">pipeline</span> <span class="fn">describe</span>(<span class="ty">val</span>: <span class="ty">Any</span>) -> <span class="ty">String</span>:
+  val <span class="op">|></span> <span class="kw">match</span>:
+    <span class="ty">Int</span>    <span class="op">-></span> <span class="str">"It's an integer"</span>
+    <span class="ty">Float</span>  <span class="op">-></span> <span class="str">"It's a float"</span>
+    <span class="ty">String</span> <span class="op">-></span> <span class="str">"It's a string"</span>
+    <span class="ty">List</span>   <span class="op">-></span> <span class="str">"It's a list"</span>
+    <span class="ty">Bool</span>   <span class="op">-></span> <span class="str">"It's a boolean"</span>
+    <span class="ty">_</span>      <span class="op">-></span> <span class="str">"Unknown type"</span>
+
+<span class="kw">pipeline</span> <span class="fn">main</span>():
+  <span class="num">42</span>          <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># "It's an integer"</span>
+  <span class="str">"pipethon"</span>  <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># "It's a string"</span>
+  [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]   <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># "It's a list"</span></pre>
+      </div>
+
+      <!-- Example 4 -->
+      <div class="example-block reveal">
+        <div class="example-label">
+          <div class="code-dots">
+            <span class="code-dot" style="background:#ff5f57;"></span>
+            <span class="code-dot" style="background:#febc2e;"></span>
+            <span class="code-dot" style="background:#28c840;"></span>
+            <span class="example-title" style="margin-left:10px;">text_processor.pipe</span>
+          </div>
+          <span class="example-tag">multi-stage pipeline</span>
+        </div>
+        <pre><span class="cm"># Example 4: Composing multiple pipelines for text processing</span>
+<span class="kw">pipeline</span> <span class="fn">normalize</span>(<span class="ty">text</span>: <span class="ty">String</span>) -> <span class="ty">String</span>:
+  text
+    <span class="op">|></span> <span class="fn">trim</span>
+    <span class="op">|></span> <span class="fn">lowercase</span>
+    <span class="op">|></span> <span class="fn">remove_punctuation</span>
+
+<span class="kw">pipeline</span> <span class="fn">word_count</span>(<span class="ty">text</span>: <span class="ty">String</span>) -> <span class="ty">Int</span>:
+  text
+    <span class="op">|></span> <span class="fn">normalize</span>
+    <span class="op">|></span> <span class="fn">split</span>(<span class="str">" "</span>)
+    <span class="op">|></span> <span class="fn">length</span>
+
+<span class="kw">pipeline</span> <span class="fn">main</span>():
+  <span class="str">"  Hello, World! This is Pipethon.  "</span>
+    <span class="op">|></span> <span class="fn">word_count</span>
+    <span class="op">|></span> <span class="fn">print</span>   <span class="cm"># prints 4</span></pre>
+      </div>
+
+      <!-- Example 5 -->
+      <div class="example-block reveal">
+        <div class="example-label">
+          <div class="code-dots">
+            <span class="code-dot" style="background:#ff5f57;"></span>
+            <span class="code-dot" style="background:#febc2e;"></span>
+            <span class="code-dot" style="background:#28c840;"></span>
+            <span class="example-title" style="margin-left:10px;">ai_query_handler.pipe</span>
+          </div>
+          <span class="example-tag">AI pipeline + intent matching</span>
+        </div>
+        <pre><span class="cm"># Example 5: Full AI pipeline — classify user intent and route to handler</span>
 <span class="kw">pipeline</span> <span class="fn">handle_query</span>(<span class="ty">query</span>: <span class="ty">String</span>) -> <span class="ty">Response</span>:
   query
     <span class="op">|></span> <span class="fn">sanitize</span>
     <span class="op">|></span> <span class="fn">embed</span>
     <span class="op">|></span> <span class="fn">ai_classify</span>(model=<span class="str">"fast"</span>)
     <span class="op">|></span> <span class="kw">match</span>:
-        <span class="ty">Intent.Question</span>(confidence > <span class="str">0.8</span>) <span class="op">-></span> <span class="fn">answer_pipeline</span>
+        <span class="ty">Intent.Question</span>(confidence > <span class="num">0.8</span>) <span class="op">-></span> <span class="fn">answer_pipeline</span>
         <span class="ty">Intent.Task</span>                          <span class="op">-></span> <span class="fn">task_pipeline</span>
         <span class="ty">Intent.Ambiguous</span>                     <span class="op">-></span> <span class="fn">clarify</span>(<span class="str">"Could you rephrase?"</span>)
-        <span class="str">_</span>                                    <span class="op">-></span> <span class="fn">fallback</span>
+        <span class="ty">_</span>                                    <span class="op">-></span> <span class="fn">fallback</span>
 
-<span class="cm"># Sub-pipeline for answering questions</span>
-<span class="kw">pipeline</span> <span class="fn">answer_pipeline</span>(<span class="ty">intent</span>: <span class="ty">Intent</span>):
+<span class="kw">pipeline</span> <span class="fn">answer_pipeline</span>(<span class="ty">intent</span>: <span class="ty">Intent</span>) -> <span class="ty">Response</span>:
   intent
     <span class="op">|></span> <span class="fn">retrieve_context</span>
-    <span class="op">|></span> <span class="fn">ai_generate</span>(model=<span class="str">"deep"</span>, temperature=<span class="str">0.4</span>)
-    <span class="op">|></span> <span class="fn">format_response</span></pre>
+    <span class="op">|></span> <span class="fn">ai_generate</span>(model=<span class="str">"deep"</span>, temperature=<span class="num">0.4</span>)
+    <span class="op">|></span> <span class="fn">format_response</span>
+
+<span class="kw">pipeline</span> <span class="fn">main</span>():
+  <span class="str">"What is Pipethon?"</span> <span class="op">|></span> <span class="fn">handle_query</span> <span class="op">|></span> <span class="fn">print</span></pre>
+      </div>
+
     </div>
   </section>
 
   <!-- TEAM -->
-  <section id="team">
+  <section id="team" style="padding-top: 0;">
     <p class="section-label reveal">The team</p>
     <h2 class="section-title reveal">Built by three.</h2>
     <div class="team-grid">
+
       <div class="team-card reveal">
-        <div class="avatar">ES</div>
-        <h3>Elias Segura</h3>
-        <p>Co-creator</p>
+        <div class="team-top">
+          <div class="avatar">ES</div>
+          <div>
+            <h3>Elias Segura</h3>
+            <p class="team-role">Co-creator</p>
+          </div>
+        </div>
+        <p class="team-bio">
+          Co-creator of Pipethon. Passionate about programming language design, compilers, and building tools that make developers more productive. <!-- TODO: update with your real bio -->
+        </p>
       </div>
+
       <div class="team-card reveal">
-        <div class="avatar">GG</div>
-        <h3>Garnik Gevorkyan</h3>
-        <p>Co-creator</p>
+        <div class="team-top">
+          <div class="avatar">GG</div>
+          <div>
+            <h3>Garnik Gevorkyan</h3>
+            <p class="team-role">Co-creator</p>
+          </div>
+        </div>
+        <p class="team-bio">
+          Co-creator of Pipethon. Focused on the semantics and type system of the language, with a deep interest in functional programming and AI systems. <!-- TODO: update with your real bio -->
+        </p>
       </div>
+
       <div class="team-card reveal">
-        <div class="avatar">RV</div>
-        <h3>Riley Vegting</h3>
-        <p>Co-creator</p>
+        <div class="team-top">
+          <div class="avatar">RV</div>
+          <div>
+            <h3>Riley Vegting</h3>
+            <p class="team-role">Co-creator</p>
+          </div>
+        </div>
+        <p class="team-bio">
+          Co-creator of Pipethon. Specializes in parser and runtime implementation, with a passion for elegant abstractions and expressive language syntax. <!-- TODO: update with your real bio -->
+        </p>
       </div>
+
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
     <span class="brand">Pipethon</span>
-    <p>Open source — <a href="https://github.com/eliassegura100/Pipethon" target="_blank">github.com/eliassegura100/Pipethon</a></p>
+    <p>Open source —
+      <a href="https://github.com/eliassegura100/Pipethon" target="_blank">github.com/eliassegura100/Pipethon</a>
+    </p>
   </footer>
 
   <script>
