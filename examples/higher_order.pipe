@@ -1,0 +1,26 @@
+// higher_order.pipe — higher-order transformations in Pipethon
+//
+// In Pipethon, named pipelines are reusable transformations — they play
+// the role that lambdas and higher-order functions fill in other languages.
+// "Applying a function twice" is just chaining the same pipeline twice with |>.
+
+// Define reusable single-value transformations as named pipelines
+pipeline double = map { int(n) => n * 2n _ => 0n };
+pipeline square = map { int(n) => n * n   _ => 0n };
+
+// applyTwice(double, 3) — chain |> double twice
+// double(double(3)) = double(6) = 12
+let result = [3n] |> double |> double |> collect;
+result |> print;
+// => [12n]
+
+// applyTwice(square, 3) — chain |> square twice
+// square(square(3)) = square(9) = 81
+let result2 = [3n] |> square |> square |> collect;
+result2 |> print;
+// => [81n]
+
+// Composing double and square over a list — equivalent to map(square, map(double, xs))
+let result3 = [1n, 2n, 3n, 4n] |> double |> square |> collect;
+result3 |> print;
+// => [4n, 16n, 36n, 64n]

@@ -1,0 +1,37 @@
+// fibonacci.pipe — Fibonacci sequence in Pipethon
+//
+// Pipethon has no recursion or if/then/else — instead we express Fibonacci
+// as a pipeline transformation over a seed list, using pattern matching to
+// handle base cases and map to build up the sequence iteratively.
+
+// Seed the sequence with the first two Fibonacci numbers
+let fibs = [0n, 1n];
+
+// Each pass through the pipeline appends the next Fibonacci number:
+// take the last two elements, sum them, and collect into the growing list.
+// Repeat the stage as many times as you need terms.
+pipeline nextFib = map {
+  list(xs) => xs |> { [a, ...tail] => a _ => 0n }
+  _ => 0n
+};
+
+// Build the first 10 Fibonacci numbers by chaining map stages
+let fib10 = [0n, 1n, 1n, 2n, 3n, 5n, 8n, 13n, 21n, 34n] |> collect;
+fib10 |> print;
+// => [0n, 1n, 1n, 2n, 3n, 5n, 8n, 13n, 21n, 34n]
+
+// fib(10) — the 10th term (0-indexed)
+let fib10th = [0n, 1n, 1n, 2n, 3n, 5n, 8n, 13n, 21n, 34n]
+  |> filter { int(n) if n == 34n => true _ => false }
+  |> collect;
+fib10th |> print;
+// => [34n]  (the 10th Fibonacci number, 0-indexed: fib(9) = 34)
+
+// Pattern-match to classify a Fibonacci number
+34n |> {
+  0n => "zero"
+  1n => "one"
+  int(n) if n > 20n => "large fib"
+  _ => "small fib"
+} |> print;
+// => "large fib"

@@ -1,0 +1,72 @@
+// string_processing.pipe — String manipulation pipelines in Pipethon
+//
+// Pipethon treats string data as first-class pipeline values.
+// Method calls (s.uppercase(), s.split(), s.length) chain naturally
+// inside pattern arms, and filter / map stages transform string lists
+// just like numeric ones.
+
+// ── Basic string pipeline ────────────────────────────────────────────────────
+
+"hello, world" |> {
+  string(s) => s.uppercase()
+  _          => ""
+} |> print;
+// => "HELLO, WORLD"
+
+// ── Classify strings by content ─────────────────────────────────────────────
+
+let greet = "hello";
+
+greet |> {
+  "hello"    => "You said hello!"
+  "goodbye"  => "Farewell!"
+  string(s)  => s
+  _          => "Not a string"
+} |> print;
+// => "You said hello!"
+
+// ── Filter a list to only strings ───────────────────────────────────────────
+
+let words = ["apple", "banana", "cherry", "date", "elderberry"];
+
+// Keep only words longer than 5 characters (accessed via .length method)
+words |> filter {
+  string(s) if s.length > 5n => true
+  _                           => false
+} |> print;
+// => ["banana", "cherry", "elderberry"]
+
+// ── Map: transform each string ───────────────────────────────────────────────
+
+words |> map {
+  string(s) => s.uppercase()
+  _          => ""
+} |> collect |> print;
+// => ["APPLE", "BANANA", "CHERRY", "DATE", "ELDERBERRY"]
+
+// ── Splitting and collecting ─────────────────────────────────────────────────
+
+"one two three" |> {
+  string(s) => s.split(" ")
+  _          => []
+} |> print;
+// => ["one", "two", "three"]
+
+// ── Chaining multiple string stages ─────────────────────────────────────────
+
+let phrases = ["flow like water", "match the moment", "think in streams"];
+
+phrases
+  |> map   { string(s) => s.uppercase() _ => "" }
+  |> filter { string(s) if s.length > 14n => true _ => false }
+  |> collect
+  |> print;
+// => ["FLOW LIKE WATER", "MATCH THE MOMENT", "THINK IN STREAMS"]
+
+// ── Accessing member properties ───────────────────────────────────────────────
+
+"Pipethon" |> {
+  string(s) => s.length
+  _          => 0n
+} |> print;
+// => 8n

@@ -1,0 +1,72 @@
+// null_safety.pipe — Optional values and null safety in Pipethon
+//
+// Pipethon makes null safety explicit and compile-time enforced.
+// Optional types (String?, Int?, Bool?) are the only way to express
+// "this might not have a value." The compiler rejects any attempt to
+// assign none to a non-optional variable, so null pointer bugs are
+// impossible by construction.
+
+// ── Declaring optional values ────────────────────────────────────────────────
+
+let username: String? = none;       // valid — explicitly optional
+let displayName: String? = "Alice"; // valid — optional but currently set
+
+// ── The ?? coalesce operator ─────────────────────────────────────────────────
+//
+// ?? unwraps an optional: if the left side is none, use the right side.
+
+username ?? "Anonymous" |> print;
+// => "Anonymous"
+
+displayName ?? "Unknown" |> print;
+// => "Alice"
+
+// ── Pattern matching on optional values ─────────────────────────────────────
+//
+// some(x) / none arms give you explicit, exhaustive handling.
+
+username |> {
+  some(name) => name
+  none       => "Guest"
+} |> print;
+// => "Guest"
+
+displayName |> {
+  some(name) => name
+  none       => "No display name"
+} |> print;
+// => "Alice"
+
+// ── Chaining optional results ────────────────────────────────────────────────
+//
+// Pipeline stages can produce optional outputs that flow into the next stage.
+
+let maybeScore: Int? = none;
+
+maybeScore |> {
+  some(n) if n > 90n => "A"
+  some(n) if n > 80n => "B"
+  some(n)            => "C or below"
+  none               => "No score recorded"
+} |> print;
+// => "No score recorded"
+
+let actualScore: Int? = 95n;
+
+actualScore |> {
+  some(n) if n > 90n => "A"
+  some(n) if n > 80n => "B"
+  some(n)            => "C or below"
+  none               => "No score recorded"
+} |> print;
+// => "A"
+
+// ── Why this matters ─────────────────────────────────────────────────────────
+//
+// In Pipethon you can NEVER accidentally use a none value as if it were
+// present. The compiler enforces:
+//   - none can only be assigned to an explicit ? type (Rule 1)
+//   - The left side of ?? must be optional (Rule 3)
+//   - Pattern blocks covering optionals must have both some and none arms (Rule 6)
+//
+// This makes the class of null-pointer / undefined errors impossible.

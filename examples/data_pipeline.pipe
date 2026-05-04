@@ -1,0 +1,77 @@
+// data_pipeline.pipe — A realistic multi-stage data pipeline in Pipethon
+//
+// This example shows Pipethon's strength: expressing complex, multi-step
+// data transformations as a readable left-to-right pipeline.
+//
+// Scenario: process a list of test scores, discard invalid entries,
+// classify each score as a grade, and collect the final results.
+
+// ── Define reusable pipeline stages ─────────────────────────────────────────
+
+// Discard scores outside the valid range 0–100
+pipeline validScores = filter {
+  int(n) if n >= 0n && n <= 100n => true
+  _                               => false
+};
+
+// Map each numeric score to a letter grade
+pipeline toGrade = map {
+  int(n) if n >= 90n => "A"
+  int(n) if n >= 80n => "B"
+  int(n) if n >= 70n => "C"
+  int(n) if n >= 60n => "D"
+  int(n)             => "F"
+  _                  => "?"
+};
+
+// ── Input data ───────────────────────────────────────────────────────────────
+
+// Raw scores — some valid, some out-of-range junk
+let rawScores = [95n, -5n, 82n, 101n, 67n, 73n, 55n, 88n];
+
+// ── Run the pipeline ─────────────────────────────────────────────────────────
+
+rawScores
+  |> validScores   // drop -5n and 101n
+  |> toGrade       // map numbers to letter grades
+  |> collect
+  |> print;
+// => ["A", "B", "D", "C", "F", "B"]
+
+// ── Inline version (no named pipelines) ─────────────────────────────────────
+
+[78n, 92n, 45n, 61n, 88n]
+  |> filter { int(n) if n >= 0n && n <= 100n => true _ => false }
+  |> map {
+       int(n) if n >= 90n => "A"
+       int(n) if n >= 80n => "B"
+       int(n) if n >= 70n => "C"
+       int(n) if n >= 60n => "D"
+       int(n)             => "F"
+       _                  => "?"
+     }
+  |> collect
+  |> print;
+// => ["C", "A", "F", "D", "B"]
+
+// ── Counting passing grades ──────────────────────────────────────────────────
+
+rawScores
+  |> validScores
+  |> filter {
+       int(n) if n >= 60n => true
+       _                   => false
+     }
+  |> collect
+  |> print;
+// => [95n, 82n, 67n, 73n, 55n, 88n]  — passing scores (≥ 60) from valid range
+
+// ── Tap for debugging without breaking the pipeline ──────────────────────────
+
+rawScores
+  |> tap
+  |> validScores
+  |> collect
+  |> print;
+// tap prints the raw list to console for debugging,
+// then the pipeline continues to the validScores stage
