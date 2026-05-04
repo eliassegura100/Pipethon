@@ -215,6 +215,10 @@ npm test
 **Group:**
 Elias Segura, Garnik Gevorkyan, Riley Vegting
 
+## Grammar
+
+https://github.com/eliassegura100/Pipethon/blob/main/src/pipethon.ohm
+
 ## Website Link
 
 https://eliassegura100.github.io/Pipethon/
