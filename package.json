@@ -23,13 +23,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/pipethon.git"
+    "url": "git+https://github.com/eliassegura100/pipethon.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/pipethon/issues"
+    "url": "https://github.com/eliassegura100/pipethon/issues"
   },
-  "homepage": "https://yourusername.github.io/pipethon",
-  "keywords": ["pipethon", "pipe", "pattern-matching", "ai", "compiler"],
+  "homepage": "https://eliassegura100.github.io/Pipethon",
+  "keywords": [
+    "pipethon",
+    "pipe",
+    "pipeline",
+    "pattern-matching",
+    "functional",
+    "compiler",
+    "language",
+    "ohm",
+    "ai",
+    "llm",
+    "programming-language"
+  ],
   "author": "Elias Segura, Garnik Gevorkyan, Riley Vegting",
   "license": "MIT",
   "dependencies": {
