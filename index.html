@@ -782,135 +782,128 @@
   </section>
 
   <!-- EXAMPLES -->
-  <section id="examples" style="padding-top: 0;">
-    <p class="section-label reveal">Examples</p>
-    <h2 class="section-title reveal">The language in action.</h2>
-    <div class="examples-stack">
+<section id="examples" style="padding-top: 0;">
+  <p class="section-label reveal">Examples</p>
+  <h2 class="section-title reveal">The language in action.</h2>
+  <div class="examples-stack">
 
-      <!-- Example 1 -->
-      <div class="example-block reveal">
-        <div class="example-label">
-          <div class="code-dots">
-            <span class="code-dot" style="background:#ff5f57;"></span>
-            <span class="code-dot" style="background:#febc2e;"></span>
-            <span class="code-dot" style="background:#28c840;"></span>
-            <span class="example-title" style="margin-left:10px;">hello_world.pipe</span>
-          </div>
-          <span class="example-tag">let + pipeline operator</span>
+    <!-- Example 1 -->
+    <div class="example-block reveal">
+      <div class="example-label">
+        <div class="code-dots">
+          <span class="code-dot" style="background:#ff5f57;"></span>
+          <span class="code-dot" style="background:#febc2e;"></span>
+          <span class="code-dot" style="background:#28c840;"></span>
+          <span class="example-title" style="margin-left:10px;">hello_world.pipe</span>
         </div>
-        <pre><span class="cm">// Example 1: Hello World — a let binding piped to print</span>
-<span class="kw">let</span> <span class="fn">greeting</span> = <span class="str">"Hello, World!"</span> <span class="op">|></span> <span class="fn">print</span>;</pre>
+        <span class="example-tag">let + pipeline operator</span>
       </div>
-
-      <!-- Example 2 -->
-      <div class="example-block reveal">
-        <div class="example-label">
-          <div class="code-dots">
-            <span class="code-dot" style="background:#ff5f57;"></span>
-            <span class="code-dot" style="background:#febc2e;"></span>
-            <span class="code-dot" style="background:#28c840;"></span>
-            <span class="example-title" style="margin-left:10px;">grade_checker.pipe</span>
-          </div>
-          <span class="example-tag">pattern matching + guards</span>
-        </div>
-        <pre><span class="cm">// Example 2: Pattern matching on values with if-guards</span>
-<span class="kw">pipeline</span> <span class="fn">grade</span> : <span class="ty">Int</span> -> <span class="ty">String</span> = {
-  n <span class="kw">if</span> n >= <span class="num">90</span> => <span class="str">"A"</span>
-  n <span class="kw">if</span> n >= <span class="num">80</span> => <span class="str">"B"</span>
-  n <span class="kw">if</span> n >= <span class="num">70</span> => <span class="str">"C"</span>
-  n <span class="kw">if</span> n >= <span class="num">60</span> => <span class="str">"D"</span>
-  _           => <span class="str">"F"</span>
-};
- 
-<span class="kw">let</span> <span class="fn">result</span> = <span class="num">85</span> <span class="op">|></span> <span class="fn">grade</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// prints "B"</span></pre>
-      </div>
-
-      <!-- Example 3 -->
-      <div class="example-block reveal">
-        <div class="example-label">
-          <div class="code-dots">
-            <span class="code-dot" style="background:#ff5f57;"></span>
-            <span class="code-dot" style="background:#febc2e;"></span>
-            <span class="code-dot" style="background:#28c840;"></span>
-            <span class="example-title" style="margin-left:10px;">type_dispatch.pipe</span>
-          </div>
-          <span class="example-tag">type matching</span>
-        </div>
-        <pre><span class="cm">// Example 3: Dispatching on runtime type using typePat patterns</span>
-<span class="kw">pipeline</span> <span class="fn">describe</span> : <span class="ty">Any</span> -> <span class="ty">String</span> = {
-  <span class="ty">int</span>(v)    => <span class="str">"It's an integer"</span>
-  <span class="ty">float</span>(v)  => <span class="str">"It's a float"</span>
-  <span class="ty">string</span>(v) => <span class="str">"It's a string"</span>
-  <span class="ty">list</span>(v)   => <span class="str">"It's a list"</span>
-  <span class="ty">bool</span>(v)   => <span class="str">"It's a boolean"</span>
-  _         => <span class="str">"Unknown type"</span>
-};
- 
-<span class="num">42</span>         <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "It's an integer"</span>
-<span class="str">"pipethon"</span> <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "It's a string"</span>
-[<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]  <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "It's a list"</span></pre>
-      </div>
-
-      <!-- Example 4 -->
-      <div class="example-block reveal">
-        <div class="example-label">
-          <div class="code-dots">
-            <span class="code-dot" style="background:#ff5f57;"></span>
-            <span class="code-dot" style="background:#febc2e;"></span>
-            <span class="code-dot" style="background:#28c840;"></span>
-            <span class="example-title" style="margin-left:10px;">null_coalesce.pipe</span>
-          </div>
-          <span class="example-tag">optionals + ?? + some/none</span>
-        </div>
-        <pre><span class="cm">// Example 4: Optional types, some/none patterns, and ?? coalescing</span>
-<span class="kw">pipeline</span> <span class="fn">greetUser</span> : <span class="ty">String?</span> -> <span class="ty">String</span> = {
-  <span class="fn">some</span>(name) => <span class="fn">concat</span>(<span class="str">"Hello, "</span>, name)
-  <span class="fn">none</span>       => <span class="str">"Hello, stranger"</span>
-};
- 
-<span class="kw">let</span> <span class="fn">username</span> : <span class="ty">String?</span> = <span class="fn">none</span>;
-<span class="kw">let</span> <span class="fn">display</span>  : <span class="ty">String?</span> = <span class="fn">none</span>;
- 
-<span class="cm">// ?? falls back to the right-hand value if the left is none</span>
-<span class="kw">let</span> <span class="fn">name</span> = username ?? <span class="str">"guest"</span>;
-<span class="kw">let</span> <span class="fn">msg</span>  = display  ?? <span class="fn">greetUser</span>;
- 
-name <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "guest"</span></pre>
-      </div>
-
-      <!-- Example 5 -->
-      <div class="example-block reveal">
-        <div class="example-label">
-          <div class="code-dots">
-            <span class="code-dot" style="background:#ff5f57;"></span>
-            <span class="code-dot" style="background:#febc2e;"></span>
-            <span class="code-dot" style="background:#28c840;"></span>
-            <span class="example-title" style="margin-left:10px;">ai_query_handler.pipe</span>
-          </div>
-          <span class="example-tag">llm() + pattern matching + pipelines</span>
-        </div>
-        <pre><span class="cm">// Example 5: Full AI pipeline — llm() stage, pattern match, null coalesce</span>
-<span class="kw">pipeline</span> <span class="fn">classify</span> : <span class="ty">String</span> -> <span class="ty">String</span> =
-  <span class="fn">sanitize</span>
-  <span class="op">|></span> <span class="fn">llm</span>(model: <span class="str">"claude"</span>, prompt: <span class="str">"Classify intent: {input}"</span>)
-  <span class="op">|></span> {
-    <span class="fn">some</span>(label) => label
-    <span class="fn">none</span>         => <span class="str">"unknown"</span>
-  };
- 
-<span class="kw">pipeline</span> <span class="fn">handleQuery</span> : <span class="ty">String</span> -> <span class="ty">String</span> =
-  <span class="fn">classify</span>
-  <span class="op">|></span> {
-    <span class="str">"question"</span> => <span class="fn">answerPipeline</span>
-    <span class="str">"task"</span>     => <span class="fn">taskPipeline</span>
-    _          => <span class="fn">clarify</span>
-  };
- 
-<span class="str">"What is Pipethon?"</span> <span class="op">|></span> <span class="fn">handleQuery</span> <span class="op">|></span> <span class="fn">print</span>;</pre>
-      </div>
-
+      <pre><span class="cm">// Example 1: Hello World — a let binding piped to print</span>
+<span class="kw">let</span> <span class="fn">greeting</span> = <span class="str">"Hello, World!"</span> <span class="op">|&gt;</span> <span class="fn">print</span>;</pre>
     </div>
-  </section>
+
+    <!-- Example 2 -->
+    <div class="example-block reveal">
+      <div class="example-label">
+        <div class="code-dots">
+          <span class="code-dot" style="background:#ff5f57;"></span>
+          <span class="code-dot" style="background:#febc2e;"></span>
+          <span class="code-dot" style="background:#28c840;"></span>
+          <span class="example-title" style="margin-left:10px;">grade_checker.pipe</span>
+        </div>
+        <span class="example-tag">pattern matching + guards</span>
+      </div>
+      <pre><span class="cm">// Example 2: Pattern matching on scores with if-guards</span>
+<span class="kw">let</span> <span class="fn">score</span>: <span class="ty">Int</span> = <span class="num">85n</span>;
+
+<span class="fn">score</span> <span class="op">|&gt;</span> {
+  <span class="ty">int</span>(n) <span class="kw">if</span> n <span class="op">&gt;=</span> <span class="num">90n</span> <span class="op">=&gt;</span> <span class="str">"A"</span>
+  <span class="ty">int</span>(n) <span class="kw">if</span> n <span class="op">&gt;=</span> <span class="num">80n</span> <span class="op">=&gt;</span> <span class="str">"B"</span>
+  <span class="ty">int</span>(n) <span class="kw">if</span> n <span class="op">&gt;=</span> <span class="num">70n</span> <span class="op">=&gt;</span> <span class="str">"C"</span>
+  <span class="ty">int</span>(n) <span class="kw">if</span> n <span class="op">&gt;=</span> <span class="num">60n</span> <span class="op">=&gt;</span> <span class="str">"D"</span>
+  _                  <span class="op">=&gt;</span> <span class="str">"F"</span>
+} <span class="op">|&gt;</span> <span class="fn">print</span>;  <span class="cm">// prints "B"</span></pre>
+    </div>
+
+    <!-- Example 3 -->
+    <div class="example-block reveal">
+      <div class="example-label">
+        <div class="code-dots">
+          <span class="code-dot" style="background:#ff5f57;"></span>
+          <span class="code-dot" style="background:#febc2e;"></span>
+          <span class="code-dot" style="background:#28c840;"></span>
+          <span class="example-title" style="margin-left:10px;">type_dispatch.pipe</span>
+        </div>
+        <span class="example-tag">type matching + named pipeline</span>
+      </div>
+      <pre><span class="cm">// Example 3: Dispatching on runtime type using typePat patterns</span>
+<span class="kw">pipeline</span> <span class="fn">describe</span>: <span class="ty">Any</span> -> <span class="ty">Any</span> = <span class="num">42n</span> <span class="op">|&gt;</span> {
+  <span class="ty">int</span>(v)    <span class="op">=&gt;</span> <span class="str">"It's an integer"</span>
+  <span class="ty">float</span>(v)  <span class="op">=&gt;</span> <span class="str">"It's a float"</span>
+  <span class="ty">string</span>(v) <span class="op">=&gt;</span> <span class="str">"It's a string"</span>
+  <span class="ty">list</span>(v)   <span class="op">=&gt;</span> <span class="str">"It's a list"</span>
+  <span class="ty">bool</span>(v)   <span class="op">=&gt;</span> <span class="str">"It's a boolean"</span>
+  _         <span class="op">=&gt;</span> <span class="str">"Unknown type"</span>
+};
+
+<span class="num">42n</span>           <span class="op">|&gt;</span> <span class="fn">describe</span> <span class="op">|&gt;</span> <span class="fn">print</span>;  <span class="cm">// "It's an integer"</span>
+<span class="str">"pipethon"</span>    <span class="op">|&gt;</span> <span class="fn">describe</span> <span class="op">|&gt;</span> <span class="fn">print</span>;  <span class="cm">// "It's a string"</span>
+[<span class="num">1n</span>, <span class="num">2n</span>, <span class="num">3n</span>] <span class="op">|&gt;</span> <span class="fn">describe</span> <span class="op">|&gt;</span> <span class="fn">print</span>;  <span class="cm">// "It's a list"</span></pre>
+    </div>
+
+    <!-- Example 4 -->
+    <div class="example-block reveal">
+      <div class="example-label">
+        <div class="code-dots">
+          <span class="code-dot" style="background:#ff5f57;"></span>
+          <span class="code-dot" style="background:#febc2e;"></span>
+          <span class="code-dot" style="background:#28c840;"></span>
+          <span class="example-title" style="margin-left:10px;">null_coalesce.pipe</span>
+        </div>
+        <span class="example-tag">optionals + ?? + some/none</span>
+      </div>
+      <pre><span class="cm">// Example 4: Optional types, some/none patterns, and ?? coalescing</span>
+<span class="kw">let</span> <span class="fn">username</span>: <span class="ty">String?</span> = <span class="kw">none</span>;
+<span class="kw">let</span> <span class="fn">display</span>: <span class="ty">String?</span>  = <span class="str">"Alice"</span>;
+
+<span class="cm">// ?? falls back to the right-hand value if the left is none</span>
+<span class="fn">username</span> <span class="op">??</span> <span class="str">"guest"</span> <span class="op">|&gt;</span> <span class="fn">print</span>;  <span class="cm">// "guest"</span>
+<span class="fn">display</span>  <span class="op">??</span> <span class="str">"guest"</span> <span class="op">|&gt;</span> <span class="fn">print</span>;  <span class="cm">// "Alice"</span>
+
+<span class="cm">// exhaustive some/none pattern matching</span>
+<span class="fn">username</span> <span class="op">|&gt;</span> {
+  <span class="kw">some</span>(name) <span class="op">=&gt;</span> name
+  <span class="kw">none</span>       <span class="op">=&gt;</span> <span class="str">"Hello, stranger"</span>
+} <span class="op">|&gt;</span> <span class="fn">print</span>;  <span class="cm">// "Hello, stranger"</span></pre>
+    </div>
+
+    <!-- Example 5 -->
+    <div class="example-block reveal">
+      <div class="example-label">
+        <div class="code-dots">
+          <span class="code-dot" style="background:#ff5f57;"></span>
+          <span class="code-dot" style="background:#febc2e;"></span>
+          <span class="code-dot" style="background:#28c840;"></span>
+          <span class="example-title" style="margin-left:10px;">ai_query_handler.pipe</span>
+        </div>
+        <span class="example-tag">llm() + pattern matching + pipelines</span>
+      </div>
+      <pre><span class="cm">// Example 5: Full AI pipeline — llm() stage, pattern match, null coalesce</span>
+<span class="kw">let</span> <span class="fn">query</span>: <span class="ty">String</span> = <span class="str">"What is Pipethon?"</span>;
+
+<span class="fn">query</span>
+  <span class="op">|&gt;</span> <span class="kw">llm</span>(model: <span class="str">"claude"</span>, prompt: <span class="str">"Classify as question/task/other: {input}"</span>)
+  <span class="op">|&gt;</span> {
+       <span class="kw">some</span>(label) <span class="kw">if</span> label <span class="op">==</span> <span class="str">"question"</span> <span class="op">=&gt;</span> <span class="str">"I'll answer that!"</span>
+       <span class="kw">some</span>(label) <span class="kw">if</span> label <span class="op">==</span> <span class="str">"task"</span>     <span class="op">=&gt;</span> <span class="str">"On it."</span>
+       <span class="kw">some</span>(label)                          <span class="op">=&gt;</span> label
+       <span class="kw">none</span>                                 <span class="op">=&gt;</span> <span class="str">"unknown"</span>
+     }
+  <span class="op">|&gt;</span> <span class="fn">print</span>;</pre>
+    </div>
+
+  </div>
+</section>
 
   <!-- STATIC RULES -->
   <section id="rules" style="padding-top: 0;">
