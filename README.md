@@ -1,8 +1,8 @@
 <img width="150" height="150" alt="Pipethon Logo copy" src="https://github.com/user-attachments/assets/901778fe-0c9c-469b-b897-c4d8cdeea65c" />
 
-# Pipethon 
+# Pipethon
 
-***Flow. Match. Think.***
+**_Flow. Match. Think._**
 
 Pipethon is a modern programming language built for the age of intelligent systems. Designed around two powerful primitives, **pipeline composition** and **pattern matching**, Pipethon gives developers a clean, expressive way to build AI-powered applications without the boilerplate, fragility, and complexity of traditional code.
 
@@ -24,22 +24,38 @@ At every stage, Pipethon's pattern matching lets you describe what your data loo
 - LLM as a pipe stage — llm(model: "...", prompt: "...") is syntax, not a library call. Outputs are typed as String? and must be handled exhaustively.
 - drop for item removal — inside filter, map, or each arms, drop removes the current item from the output.
 - Method calls on values — s.uppercase(), s.length, xs.split(" ") work naturally inside arm bodies.
-- Arithmetic & logic — +, -, *, /, %, **, !, &&, ||, ==, !=, <, <=, >, >=.
+- Arithmetic & logic — +, -, \*, /, %, \*\*, !, &&, ||, ==, !=, <, <=, >, >=.
 - Compile to JavaScript — the compiler outputs clean, runnable JS through parse → analyze → optimize → generate.
 
 # Static Rules
 
 Pipethon enforces 13 static constraints at analysis time. Violations are reported with precise source locations.
-#Rule1none can only be assigned to a variable declared with an explicit optional type (?).2The source of a ?? expression must be typed as optional.3The left operand of ?? must be an optional type.4llm() calls must include a model argument.5llm() calls must include a prompt argument.6Pattern blocks must be exhaustive (must have a wildcard _ or cover all cases).7The wildcard _ arm must be the last arm in a pattern block.8Guard conditions must be boolean expressions.9Type annotations in let and pipeline declarations must name known types.10Object patterns must not repeat the same field name.11Variables must be declared before use.12No two declarations in the same scope may share a name.13drop may only appear as an arm body inside filter, map, or each stages.
+
+1. `none` can only be assigned to a variable declared with an explicit optional type (?).
+2. The source of a `??` expression must be typed as optional.
+3. The left operand of `??` must be an optional type.
+4. `llm()` calls must include a `model` argument.
+5. `llm()` calls must include a `prompt` argument.
+6. Pattern blocks must be exhaustive (must have a wildcard `_` or cover all cases).
+7. The wildcard `_` arm must be the last arm in a pattern block.
+8. Guard conditions must be boolean expressions.
+9. Type annotations in `let` and `pipeline` declarations must name known types.
+10. Object patterns must not repeat the same field name.
+11. Variables must be declared before use.
+12. No two declarations in the same scope may share a name.
+13. `drop` may only appear as an arm body inside `filter`, `map`, or `each` stages.
 
 # Examples
 
-Hello, pipeline
+## Hello, pipeline
 
+```pipethon
 "hello, world" |> print;
+```
 
-Pattern matching with guards
+## Pattern matching with guards
 
+```pipethon
 let score: Int = 87n;
 
 score |> {
@@ -50,9 +66,11 @@ score |> {
   _                  => "invalid"
 } |> print;
 // => "B"
+```
 
-Optional / null safety
+## Optional / null safety
 
+```pipethon
 let username: String? = none;
 
 username ?? "Anonymous" |> print;
@@ -63,9 +81,11 @@ username |> {
   none        => "Guest"
 } |> print;
 // => "Guest"
+```
 
-Multi-stage data pipeline
+## Multi-stage data pipeline
 
+```pipethon
 pipeline validScores = filter {
   int(n) if n >= 0n && n <= 100n => true
   _                               => false
@@ -85,9 +105,11 @@ pipeline toGrade = map {
   |> collect
   |> print;
 // => ["A", "B", "D"]
+```
 
-LLM as a pipe stage
+## LLM as a pipe stage
 
+```pipethon
 "Summarize the Gettysburg Address in one sentence."
   |> llm(model: "claude", prompt: "{input}")
   |> {
@@ -95,44 +117,60 @@ LLM as a pipe stage
        none           => "No response"
      }
   |> print;
+```
 
-Fibonacci (iterative via pipeline)
+## Fibonacci (iterative via pipeline)
 
+```pipethon
 let fib10 = [0n, 1n, 1n, 2n, 3n, 5n, 8n, 13n, 21n, 34n] |> collect;
 fib10 |> print;
 // => [0n, 1n, 1n, 2n, 3n, 5n, 8n, 13n, 21n, 34n]
+```
 
 # Command-Line Usage
 
-After cloning and running npm install:
+After cloning and running `npm install`:
 
-# Syntax check
+**Syntax check**
 
+```bash
 node src/pipethon.js check examples/data_pipeline.pipe
+```
 
-# Show parsed AST
+**Show parsed AST**
 
+```bash
 node src/pipethon.js parse examples/data_pipeline.pipe
+```
 
-# Run semantic analysis
+**Run semantic analysis**
 
+```bash
 node src/pipethon.js analyze examples/data_pipeline.pipe
+```
 
-# Show optimized AST
+**Show optimized AST**
 
+```bash
 node src/pipethon.js optimize examples/data_pipeline.pipe
+```
 
-# Generate JavaScript
+**Generate JavaScript**
 
+```bash
 node src/pipethon.js generate examples/data_pipeline.pipe
+```
 
-# Compile to a JS file
+**Compile to a JS file**
 
+```bash
 node src/pipethon.js compile examples/data_pipeline.pipe -o out.js
 node out.js
+```
 
 # Project Structure
 
+```
 pipethon/
 ├── src/
 │   ├── pipethon.ohm      # Ohm grammar
@@ -158,6 +196,7 @@ pipethon/
 ├── logo.svg
 ├── package.json
 └── .gitignore
+```
 
 # Getting Started
 
