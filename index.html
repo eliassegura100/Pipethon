@@ -448,6 +448,63 @@
       color: #fab387;
     }
 
+    /* RULES */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .rule-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .rule-card:hover {
+      border-color: rgba(34, 201, 122, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .rule-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent);
+      background: rgba(34, 201, 122, 0.1);
+      border: 1px solid rgba(34, 201, 122, 0.2);
+      border-radius: 6px;
+      padding: 4px 8px;
+      flex-shrink: 0;
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    .rule-body {
+      flex: 1;
+    }
+
+    .rule-text {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .rule-text code {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent2);
+      background: rgba(34, 201, 122, 0.08);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
     /* TEAM */
     .team-grid {
       display: grid;
@@ -467,6 +524,9 @@
       border-radius: 14px;
       padding: 28px;
       transition: border-color 0.25s, transform 0.25s;
+      display: block;
+      color: inherit;
+      cursor: pointer;
     }
 
     .team-card:hover {
@@ -852,6 +912,114 @@ name <span class="op">|></span> <span class="fn">print</span>;  <span class="cm"
     </div>
   </section>
 
+  <!-- STATIC RULES -->
+  <section id="rules" style="padding-top: 0;">
+    <p class="section-label reveal">Static analysis</p>
+    <h2 class="section-title reveal">13 rules, enforced at compile time.</h2>
+    <p class="reveal" style="color: var(--text2); font-size: 15px; margin-bottom: 36px; max-width: 680px;">
+      Pipethon enforces 13 static constraints at analysis time. Violations are reported with precise source locations.
+    </p>
+    <div class="rules-grid">
+
+      <div class="rule-card reveal">
+        <span class="rule-num">01</span>
+        <div class="rule-body">
+          <p class="rule-text"><code>none</code> can only be assigned to a variable declared with an explicit optional
+            type (<code>?</code>).</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">02</span>
+        <div class="rule-body">
+          <p class="rule-text">The source of a <code>??</code> expression must be typed as optional.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">03</span>
+        <div class="rule-body">
+          <p class="rule-text">The left operand of <code>??</code> must be an optional type.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">04</span>
+        <div class="rule-body">
+          <p class="rule-text"><code>llm()</code> calls must include a <code>model</code> argument.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">05</span>
+        <div class="rule-body">
+          <p class="rule-text"><code>llm()</code> calls must include a <code>prompt</code> argument.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">06</span>
+        <div class="rule-body">
+          <p class="rule-text">Pattern blocks must be exhaustive — must include a wildcard <code>_</code> or cover all
+            cases.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">07</span>
+        <div class="rule-body">
+          <p class="rule-text">The wildcard <code>_</code> arm must be the last arm in a pattern block.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">08</span>
+        <div class="rule-body">
+          <p class="rule-text">Guard conditions must be boolean expressions.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">09</span>
+        <div class="rule-body">
+          <p class="rule-text">Type annotations in <code>let</code> and <code>pipeline</code> declarations must name
+            known types.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">10</span>
+        <div class="rule-body">
+          <p class="rule-text">Object patterns must not repeat the same field name.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">11</span>
+        <div class="rule-body">
+          <p class="rule-text">Variables must be declared before use.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">12</span>
+        <div class="rule-body">
+          <p class="rule-text">No two declarations in the same scope may share a name.</p>
+        </div>
+      </div>
+
+      <div class="rule-card reveal">
+        <span class="rule-num">13</span>
+        <div class="rule-body">
+          <p class="rule-text"><code>drop</code> may only appear as an arm body inside <code>filter</code>,
+            <code>map</code>, or <code>each</code> stages.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- TEAM -->
   <section id="team" style="padding-top: 0;">
     <p class="section-label reveal">The team</p>
@@ -868,7 +1036,9 @@ name <span class="op">|></span> <span class="fn">print</span>;  <span class="cm"
           </div>
         </div>
         <p class="team-bio">
-          Co-creator of Pipethon. LMU CS grad with a passion for programming languages and AI. Focused on language design and implementation, with a deep interest in how programming languages can evolve to meet the needs of AI-driven development.
+          Co-creator of Pipethon. LMU CS grad with a passion for programming languages and AI. Focused on language
+          design and implementation, with a deep interest in how programming languages can evolve to meet the needs of
+          AI-driven development.
         </p>
       </a>
 
