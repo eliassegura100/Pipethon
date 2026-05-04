@@ -52,6 +52,10 @@ describe("The analyzer", () => {
       ok("let x = 42n; x |> print;")
     })
 
+    it("resolves an outer-scope variable referenced inside a pattern arm body", () => {
+      ok("let val: Int = 99n; 42n |> { int(n) => val _ => 0n };")
+    })
+
     it("accepts a filter pipeline with type pattern and guard", () => {
       ok("[1n, 2n, 3n] |> filter { int(n) if n > 1n => true _ => false };")
     })
