@@ -31,7 +31,7 @@ At every stage, Pipethon's pattern matching lets you describe what your data loo
 
 Pipethon enforces 13 static constraints at analysis time. Violations are reported with precise source locations.
 
-1. `none` can only be assigned to a variable declared with an explicit optional type (?).
+1. `none`(null) can only be assigned to a variable declared with an explicit optional type (?).
 2. The source of a `??` expression must be typed as optional.
 3. The left operand of `??` must be an optional type.
 4. `llm()` calls must include a `model` argument.
@@ -174,6 +174,7 @@ node out.js
 pipethon/
 ├── src/
 │   ├── pipethon.ohm      # Ohm grammar
+│   ├── pipethon.js       # CLI entry point
 │   ├── parser.js         # Ohm → AST
 │   ├── core.js           # AST node constructors and types
 │   ├── analyzer.js       # Semantic analysis (13 static rules)
@@ -182,10 +183,11 @@ pipethon/
 │   └── compiler.js       # Orchestrates the full pipeline
 ├── test/
 │   ├── parser.test.js
-│   ├── analyzer.test.js  # 62 tests
-│   ├── optimizer.test.js # 52 tests
-│   ├── generator.test.js # 51 tests
-│   └── compiler.test.js  # 32 tests
+│   ├── analyzer.test.js
+│   ├── optimizer.test.js
+│   ├── generator.test.js
+│   ├── compiler.test.js
+│   └── analysis_output.txt
 ├── examples/
 │   ├── fibonacci.pipe
 │   ├── higher_order.pipe
@@ -193,7 +195,12 @@ pipethon/
 │   ├── string_processing.pipe
 │   └── data_pipeline.pipe
 ├── docs/                 # GitHub Pages companion site
-├── logo.svg
+├── assets/
+├── coverage/
+├── BOILERPLATE_GUIDE.md
+├── index.html
+├── LICENSE
+├── README.md
 ├── package.json
 └── .gitignore
 ```
