@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pipethon — Flow. Match. Think.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Nunito:wght@800;900&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Nunito:wght@800;900&display=swap"
+    rel="stylesheet" />
   <style>
     :root {
       --bg: #0d0d14;
@@ -23,8 +26,17 @@
       --body: 'DM Sans', sans-serif;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       background: var(--bg);
@@ -38,13 +50,15 @@
     /* NAV */
     nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 14px 48px;
-      background: rgba(13,13,20,0.88);
+      background: rgba(13, 13, 20, 0.88);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
@@ -66,7 +80,8 @@
       object-fit: cover;
       border-radius: 50%;
       transform: scale(2);
-      transform-origin: center 35%;
+      transform-origin: center 45%;
+      transform: translatex(-8px) scale(2);
       clip-path: circle(42% at 50% 35%);
     }
 
@@ -83,18 +98,23 @@
       transition: color 0.2s;
     }
 
-    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover {
+      color: var(--text);
+    }
 
     .nav-links .github-link {
       color: var(--accent2);
-      border: 1px solid rgba(34,201,122,0.35);
+      border: 1px solid rgba(34, 201, 122, 0.35);
       padding: 5px 14px;
       border-radius: 6px;
       font-size: 13px;
       transition: background 0.2s;
     }
 
-    .nav-links .github-link:hover { background: rgba(34,201,122,0.1); color: var(--accent2); }
+    .nav-links .github-link:hover {
+      background: rgba(34, 201, 122, 0.1);
+      color: var(--accent2);
+    }
 
     /* HERO */
     .hero {
@@ -114,8 +134,8 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(34,201,122,0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(74,222,150,0.08) 0%, transparent 60%);
+        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(34, 201, 122, 0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(74, 222, 150, 0.08) 0%, transparent 60%);
       pointer-events: none;
     }
 
@@ -123,8 +143,8 @@
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(34,201,122,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(34,201,122,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(34, 201, 122, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 201, 122, 0.04) 1px, transparent 1px);
       background-size: 48px 48px;
       mask-image: radial-gradient(ellipse at 50% 0%, black 20%, transparent 70%);
       pointer-events: none;
@@ -134,8 +154,8 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(34,201,122,0.12);
-      border: 1px solid rgba(34,201,122,0.3);
+      background: rgba(34, 201, 122, 0.12);
+      border: 1px solid rgba(34, 201, 122, 0.3);
       border-radius: 100px;
       padding: 6px 16px;
       font-family: var(--mono);
@@ -146,15 +166,25 @@
     }
 
     .hero-badge .dot {
-      width: 6px; height: 6px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--accent3);
       animation: pulse 2s ease infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+      }
     }
 
     h1 {
@@ -168,7 +198,9 @@
       animation: fadeUp 0.6s 0.1s ease both;
     }
 
-    h1 span { color: var(--accent2); }
+    h1 span {
+      color: var(--accent2);
+    }
 
     .tagline {
       font-family: var(--mono);
@@ -209,10 +241,28 @@
       transition: all 0.2s;
     }
 
-    .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
-    .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); transform: translateY(-1px); }
-    .btn-outline { background: transparent; color: var(--accent2); border: 1px solid rgba(34,201,122,0.4); }
-    .btn-outline:hover { background: rgba(34,201,122,0.1); transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent2);
+      border-color: var(--accent2);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent2);
+      border: 1px solid rgba(34, 201, 122, 0.4);
+    }
+
+    .btn-outline:hover {
+      background: rgba(34, 201, 122, 0.1);
+      transform: translateY(-1px);
+    }
 
     /* SECTIONS */
     section {
@@ -249,7 +299,9 @@
       margin-bottom: 20px;
     }
 
-    .story-text p:last-child { margin-bottom: 0; }
+    .story-text p:last-child {
+      margin-bottom: 0;
+    }
 
     /* FEATURES */
     .features-grid {
@@ -266,10 +318,14 @@
       transition: border-color 0.25s, transform 0.25s;
     }
 
-    .feature-card:hover { border-color: rgba(34,201,122,0.45); transform: translateY(-3px); }
+    .feature-card:hover {
+      border-color: rgba(34, 201, 122, 0.45);
+      transform: translateY(-3px);
+    }
 
     .feature-icon {
-      width: 44px; height: 44px;
+      width: 44px;
+      height: 44px;
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -277,9 +333,17 @@
       margin-bottom: 18px;
     }
 
-    .icon-green { background: rgba(34,201,122,0.12); }
-    .icon-teal  { background: rgba(93,202,165,0.12); }
-    .icon-amber { background: rgba(239,159,39,0.12); }
+    .icon-green {
+      background: rgba(34, 201, 122, 0.12);
+    }
+
+    .icon-teal {
+      background: rgba(93, 202, 165, 0.12);
+    }
+
+    .icon-amber {
+      background: rgba(239, 159, 39, 0.12);
+    }
 
     .feature-card h3 {
       font-family: var(--display);
@@ -289,10 +353,18 @@
       margin-bottom: 8px;
     }
 
-    .feature-card p { font-size: 14px; color: var(--text2); line-height: 1.7; }
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.7;
+    }
 
     /* EXAMPLES */
-    .examples-stack { display: flex; flex-direction: column; gap: 28px; }
+    .examples-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
 
     .example-block {
       background: var(--bg2);
@@ -321,14 +393,23 @@
       font-family: var(--mono);
       font-size: 11px;
       color: var(--accent3);
-      background: rgba(34,201,122,0.1);
-      border: 1px solid rgba(34,201,122,0.2);
+      background: rgba(34, 201, 122, 0.1);
+      border: 1px solid rgba(34, 201, 122, 0.2);
       padding: 3px 10px;
       border-radius: 100px;
     }
 
-    .code-dots { display: flex; gap: 6px; align-items: center; }
-    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .code-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
 
     pre {
       padding: 22px 28px;
@@ -338,13 +419,34 @@
       line-height: 1.9;
     }
 
-    .kw  { color: #cba6f7; }
-    .fn  { color: #89b4fa; }
-    .str { color: #a6e3a1; }
-    .op  { color: #89dceb; }
-    .cm  { color: #585878; font-style: italic; }
-    .ty  { color: #f9e2af; }
-    .num { color: #fab387; }
+    .kw {
+      color: #cba6f7;
+    }
+
+    .fn {
+      color: #89b4fa;
+    }
+
+    .str {
+      color: #a6e3a1;
+    }
+
+    .op {
+      color: #89dceb;
+    }
+
+    .cm {
+      color: #585878;
+      font-style: italic;
+    }
+
+    .ty {
+      color: #f9e2af;
+    }
+
+    .num {
+      color: #fab387;
+    }
 
     /* TEAM */
     .team-grid {
@@ -353,7 +455,13 @@
       gap: 24px;
     }
 
+    .team-card,
+    .team-card * {
+      text-decoration: none;
+    }
+
     .team-card {
+      text-align: center;
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -361,15 +469,30 @@
       transition: border-color 0.25s, transform 0.25s;
     }
 
-    .team-card:hover { border-color: rgba(34,201,122,0.4); transform: translateY(-3px); }
+    .team-card:hover {
+      border-color: rgba(34, 201, 122, 0.4);
+      transform: translateY(-3px);
+    }
 
-    .team-top { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+    .team-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .team-top>div {
+      text-align: center;
+    }
 
     .avatar {
-      width: 56px; height: 56px;
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
-      background: rgba(34,201,122,0.12);
-      border: 1px solid rgba(34,201,122,0.3);
+      background: rgba(34, 201, 122, 0.12);
+      border: 1px solid rgba(34, 201, 122, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -378,11 +501,36 @@
       font-weight: 700;
       color: var(--accent2);
       flex-shrink: 0;
+      overflow: hidden;
+      margin: 0 auto;
     }
 
-    .team-card h3 { font-family: var(--display); font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-    .team-role { font-size: 12px; color: var(--accent3); font-family: var(--mono); }
-    .team-bio { font-size: 14px; color: var(--text2); line-height: 1.7; }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .team-card h3 {
+      font-family: var(--display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .team-role {
+      font-size: 12px;
+      color: var(--accent3);
+      font-family: var(--mono);
+    }
+
+    .team-bio {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.7;
+    }
 
     /* FOOTER */
     footer {
@@ -395,30 +543,78 @@
       gap: 12px;
     }
 
-    footer .brand { font-family: var(--logo-font); font-weight: 900; font-size: 16px; color: var(--accent2); }
-    footer p { font-size: 13px; color: var(--text2); }
-    footer a { color: var(--accent2); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+    footer .brand {
+      font-family: var(--logo-font);
+      font-weight: 900;
+      font-size: 16px;
+      color: var(--accent2);
+    }
+
+    footer p {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    footer a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
 
     /* ANIMATIONS */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     /* RESPONSIVE */
     @media (max-width: 700px) {
-      nav { padding: 14px 20px; }
-      .nav-links { gap: 14px; }
-      .nav-links li:not(:last-child) { display: none; }
-      section { padding: 72px 20px; }
-      footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
+      nav {
+        padding: 14px 20px;
+      }
+
+      .nav-links {
+        gap: 14px;
+      }
+
+      .nav-links li:not(:last-child) {
+        display: none;
+      }
+
+      section {
+        padding: 72px 20px;
+      }
+
+      footer {
+        padding: 28px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- NAV -->
@@ -458,16 +654,31 @@
     <h2 class="section-title reveal">Why we built Pipethon.</h2>
     <div class="story-text">
       <p class="reveal">
-        Pipethon was born out of frustration with the complexity of building AI-powered applications in traditional languages. When working with large language models and data transformation pipelines, developers face deeply nested callbacks, brittle string parsing, and unpredictable output — Pipethon was designed to solve all three at once. By centering the language around two core primitives — <strong style="color: var(--text)">pipeline composition</strong> and <strong style="color: var(--text)">pattern matching</strong> — Pipethon turns what used to be messy, hard-to-read code into clear, expressive programs that tell a story from input to output.
+        Pipethon was born out of frustration with the complexity of building AI-powered applications in traditional
+        languages. When working with large language models and data transformation pipelines, developers face deeply
+        nested callbacks, brittle string parsing, and unpredictable output. Pipethon was designed to solve all three at
+        once. By centering the language around two core primitives, <strong style="color: var(--text)">pipeline
+          composition</strong> and <strong style="color: var(--text)">pattern matching</strong>, Pipethon turns what
+        used to be messy, hard-to-read code into clear, expressive programs that tell a story from input to output.
       </p>
       <p class="reveal">
-        In Pipethon, every program is a series of transformations. Data flows through stages using the <code style="font-family: var(--mono); color: var(--accent2); font-size: 14px;">|></code> operator, where each stage receives the output of the last, reshapes it, routes it, or passes it along. This pipeline-first design eliminates the tangled control flow that plagues most AI application code and makes programs dramatically easier to read, test, and maintain. There are no deeply nested conditionals, no fragile string manipulation — just clean, readable pipelines.
+        In Pipethon, every program is a series of transformations. Data flows through stages using the <code
+          style="font-family: var(--mono); color: var(--accent2); font-size: 14px;">|></code> operator, where each stage
+        receives the output of the last, reshapes it, routes it, or passes it along. This pipeline-first design
+        eliminates the tangled control flow that plagues most AI application code and makes programs dramatically easier
+        to read, test, and maintain. There are no deeply nested conditionals, no fragile string manipulation. Just
+        clean, readable pipelines.
       </p>
       <p class="reveal">
-        At every stage, Pipethon's pattern matching lets you describe what your data looks like and what should happen to it — by type, by shape, by value, or by structure. When an AI model returns unpredictable output, pattern matching tames it. When a pipeline needs to branch based on confidence scores or intent classification, pattern matching routes it elegantly. Pipethon is not just a language for writing AI apps — it's a language that thinks the way AI pipelines actually work.
+        At every stage, Pipethon's pattern matching lets you describe what your data looks like and what should happen
+        to it by type, by shape, by value, or by structure. When an AI model returns unpredictable output, pattern
+        matching tames it. When a pipeline needs to branch based on confidence scores or intent classification, pattern
+        matching routes it elegantly. Pipethon is not just a language for writing AI apps, it's a language that thinks
+        the way AI pipelines actually work.
       </p>
     </div>
   </section>
+
 
   <!-- FEATURES -->
   <section id="features" style="padding-top: 0;">
@@ -476,24 +687,36 @@
     <div class="features-grid">
       <div class="feature-card reveal">
         <div class="feature-icon icon-green">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4ade96" stroke-width="1.8"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4ade96" stroke-width="1.8">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
         </div>
         <h3>Pipeline composition</h3>
-        <p>Every program is a series of clean transformations. Data flows stage to stage — no tangled callbacks, no deeply nested conditionals.</p>
+        <p>Every program is a series of clean transformations. Data flows stage to stage — no tangled callbacks, no
+          deeply nested conditionals.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon icon-teal">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5dcaa5" stroke-width="1.8"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5dcaa5" stroke-width="1.8">
+            <path
+              d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
+          </svg>
         </div>
         <h3>Pattern matching</h3>
-        <p>Match by type, shape, value, or structure. Tame unpredictable AI output, route branches cleanly, and validate data with elegance.</p>
+        <p>Match by type, shape, value, or structure. Tame unpredictable AI output, route branches cleanly, and validate
+          data with elegance.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon icon-amber">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef9f27" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef9f27" stroke-width="1.8">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+          </svg>
         </div>
         <h3>AI-native primitives</h3>
-        <p>Pipethon is designed from the ground up to integrate with AI models — call, classify, and branch on model output in a single pipeline.</p>
+        <p>Pipethon is designed from the ground up to integrate with AI models — call, classify, and branch on model
+          output in a single pipeline.</p>
       </div>
     </div>
   </section>
@@ -538,7 +761,7 @@
   n <span class="kw">if</span> n >= <span class="num">60</span> => <span class="str">"D"</span>
   _           => <span class="str">"F"</span>
 };
-
+ 
 <span class="kw">let</span> <span class="fn">result</span> = <span class="num">85</span> <span class="op">|></span> <span class="fn">grade</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// prints "B"</span></pre>
       </div>
 
@@ -562,7 +785,7 @@
   <span class="ty">bool</span>(v)   => <span class="str">"It's a boolean"</span>
   _         => <span class="str">"Unknown type"</span>
 };
-
+ 
 <span class="num">42</span>         <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "It's an integer"</span>
 <span class="str">"pipethon"</span> <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "It's a string"</span>
 [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]  <span class="op">|></span> <span class="fn">describe</span> <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "It's a list"</span></pre>
@@ -584,14 +807,14 @@
   <span class="fn">some</span>(name) => <span class="fn">concat</span>(<span class="str">"Hello, "</span>, name)
   <span class="fn">none</span>       => <span class="str">"Hello, stranger"</span>
 };
-
+ 
 <span class="kw">let</span> <span class="fn">username</span> : <span class="ty">String?</span> = <span class="fn">none</span>;
 <span class="kw">let</span> <span class="fn">display</span>  : <span class="ty">String?</span> = <span class="fn">none</span>;
-
+ 
 <span class="cm">// ?? falls back to the right-hand value if the left is none</span>
 <span class="kw">let</span> <span class="fn">name</span> = username ?? <span class="str">"guest"</span>;
 <span class="kw">let</span> <span class="fn">msg</span>  = display  ?? <span class="fn">greetUser</span>;
-
+ 
 name <span class="op">|></span> <span class="fn">print</span>;  <span class="cm">// "guest"</span></pre>
       </div>
 
@@ -614,7 +837,7 @@ name <span class="op">|></span> <span class="fn">print</span>;  <span class="cm"
     <span class="fn">some</span>(label) => label
     <span class="fn">none</span>         => <span class="str">"unknown"</span>
   };
-
+ 
 <span class="kw">pipeline</span> <span class="fn">handleQuery</span> : <span class="ty">String</span> -> <span class="ty">String</span> =
   <span class="fn">classify</span>
   <span class="op">|></span> {
@@ -622,7 +845,7 @@ name <span class="op">|></span> <span class="fn">print</span>;  <span class="cm"
     <span class="str">"task"</span>     => <span class="fn">taskPipeline</span>
     _          => <span class="fn">clarify</span>
   };
-
+ 
 <span class="str">"What is Pipethon?"</span> <span class="op">|></span> <span class="fn">handleQuery</span> <span class="op">|></span> <span class="fn">print</span>;</pre>
       </div>
 
@@ -634,46 +857,55 @@ name <span class="op">|></span> <span class="fn">print</span>;  <span class="cm"
     <p class="section-label reveal">The team</p>
     <h2 class="section-title reveal">Built by three.</h2>
     <div class="team-grid">
-
-      <div class="team-card reveal">
+      <a href="https://www.linkedin.com/in/elias-segura-cs/" target="_blank" class="team-card reveal">
         <div class="team-top">
-          <div class="avatar">ES</div>
+          <div class="avatar">
+            <img src="assets/Elias.png" alt="Elias Segura">
+          </div>
           <div>
             <h3>Elias Segura</h3>
             <p class="team-role">Co-creator</p>
           </div>
         </div>
         <p class="team-bio">
-          Co-creator of Pipethon. Passionate about programming language design, compilers, and building tools that make developers more productive. <!-- TODO: update with your real bio -->
+          Co-creator of Pipethon. Passionate about programming language design, compilers, and building tools that
+          make
+          developers more productive. <!-- TODO: update with your real bio -->
         </p>
-      </div>
+      </a>
 
-      <div class="team-card reveal">
+      <a href="https://www.linkedin.com/in/garnik-gevorkyan-3b5a79276/" target="_blank" class="team-card reveal">
         <div class="team-top">
-          <div class="avatar">GG</div>
+          <div class="avatar">
+            <img src="assets/Garnik_Mog.jpg" alt="Garnik Gevorkyan">
+          </div>
           <div>
             <h3>Garnik Gevorkyan</h3>
             <p class="team-role">Co-creator</p>
           </div>
         </div>
         <p class="team-bio">
-          Co-creator of Pipethon. Focused on the semantics and type system of the language, with a deep interest in functional programming and AI systems. <!-- TODO: update with your real bio -->
+          Co-creator of Pipethon. Focused on the semantics and type system of the language, with a deep interest in
+          functional programming and AI systems. <!-- TODO: update with your real bio -->
         </p>
-      </div>
+      </a>
 
-      <div class="team-card reveal">
+      <a href="https://www.linkedin.com/in/riley-vegting/" target="_blank" class="team-card reveal">
         <div class="team-top">
-          <div class="avatar">RV</div>
+          <div class="avatar">
+            <!-- Replace the text below with: <img src="YOUR_IMAGE_URL" alt="Riley Vegting"> -->
+            RV
+          </div>
           <div>
             <h3>Riley Vegting</h3>
             <p class="team-role">Co-creator</p>
           </div>
         </div>
         <p class="team-bio">
-          Co-creator of Pipethon. Specializes in parser and runtime implementation, with a passion for elegant abstractions and expressive language syntax. <!-- TODO: update with your real bio -->
+          Co-creator of Pipethon. Specializes in parser and runtime implementation, with a passion for elegant
+          abstractions and expressive language syntax. <!-- TODO: update with your real bio -->
         </p>
-      </div>
-
+      </a>
     </div>
   </section>
 
@@ -699,4 +931,5 @@ name <span class="op">|></span> <span class="fn">print</span>;  <span class="cm"
   </script>
 
 </body>
+
 </html>
