@@ -194,14 +194,17 @@ pipethon/
 │   ├── null_safety.pipe
 │   ├── string_processing.pipe
 │   └── data_pipeline.pipe
-├── docs/                 # GitHub Pages companion site
 ├── assets/
-├── coverage/
-├── BOILERPLATE_GUIDE.md
+│   ├── Elias.png
+│   ├── Garnik_Mog.jpg
+│   ├── Riley_mog.png 
+├── docs/
+│   ├── Pipethon_Web_logo.png
 ├── index.html
 ├── LICENSE
 ├── README.md
 ├── package.json
+├── .prettierrc.json
 └── .gitignore
 ```
 
